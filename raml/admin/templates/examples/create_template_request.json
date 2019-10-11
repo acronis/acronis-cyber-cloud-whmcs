@@ -1,0 +1,80 @@
+{
+  "name": "Service template for partners",
+  "description": "Human-readable description that will be displayed to the users",
+  "server_id": 1,
+  "tenant_kind": "partner",
+  "applications": [
+    {
+      "type": "backup",
+      "status": "active",
+      "editions": [
+        {
+          "name": "standard",
+          "status": "active"
+        },
+        {
+          "name": "advanced",
+          "status": "inactive"
+        }
+      ],
+      "offering_items": [
+        {
+          "name": "storage",
+          "measurement_unit": "bytes",
+          "infra_id": "66d7d7b2-4844-4ebd-b467-d407f7234bb1",
+          "quota_value": 107374182400,
+          "status": "active"
+        },
+        {
+          "name": "workstations",
+          "measurement_unit": "quantity",
+          "infra_id": null,
+          "quota_value": 1000,
+          "status": "active"
+        },
+        {
+          "name": "local_storage",
+          "measurement_unit": "bytes",
+          "infra_id": null,
+          "quota_value": null,
+          "status": "active"
+        },
+        {
+          "name": "servers",
+          "measurement_unit": "quantity",
+          "infra_id": null,
+          "quota_value": 100,
+          "status": "inactive"
+        },
+        {
+          "name": "child_storages",
+          "measurement_unit": "feature",
+          "infra_id": null,
+          "quota_value": null,
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "type": "files_cloud",
+      "status": "active",
+      "editions": [],
+      "offering_items": [
+        {
+          "name": "fc_storage",
+          "measurement_unit": "bytes",
+          "infra_id": "6bfc59d5-b53a-43f6-88b1-e90d1a2fea6a",
+          "quota_value": 107374182400,
+          "status": "active"
+        },
+        {
+          "name": "fc_seats",
+          "measurement_unit": "quantity",
+          "infra_id": null,
+          "quota_value": 1000,
+          "status": "active"
+        }
+      ]
+    }
+  ]
+}

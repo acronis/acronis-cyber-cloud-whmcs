@@ -1,0 +1,28 @@
+[
+  {
+    "type": "backup",
+    "editions": [
+      "standard",
+      "advanced"
+    ],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "type": "notary",
+    "editions": [],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "type": "hci",
+    "editions": [],
+    "tenant_kinds": [
+      "partner"
+    ]
+  }
+]

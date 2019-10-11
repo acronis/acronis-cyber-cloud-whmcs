@@ -1,0 +1,34 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+post:
+  description: Update a tempate
+  body:
+    application/json:
+      type: object
+      properties:
+        name?:
+          type: string
+          description: Human-readable name that will be displayed to the users
+        description?:
+          type: string
+          description: Human-readable description that will be displayed to the users
+        user_role?:
+          type: common.UserRole
+          description: User role
+        applications:
+          type: array
+          items:
+            type: !include ../types/Application.raml
+      example: !include ../examples/update_template_request.json
+  responses:
+    204:
+      description: Successfully updated
+    400:
+      description: The request body has invalid properties
+      body:
+        application/json:
+          type: common.Error
+          example: !include ../examples/update_template_error_400.json

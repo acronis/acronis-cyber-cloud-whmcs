@@ -1,0 +1,22 @@
+#%RAML 1.0 Trait
+
+uses:
+  common: /common/library.raml
+
+queryParameters:
+  template_id:
+    type: integer
+    minimum: 1
+responses:
+  400:
+    description: The query parameter has invalid format
+    body:
+      application/json:
+        type: common.Error
+        example: !include ../examples/traits/error_400.json
+  404:
+    description: Cannot find the template
+    body:
+      application/json:
+        type: common.Error
+        example: !include ../examples/traits/error_404.json

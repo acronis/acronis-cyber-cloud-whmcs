@@ -1,0 +1,11 @@
+#%RAML 1.0 Trait
+
+uses:
+  common: ../library.raml
+
+responses:
+  415:
+    description: Required type in 'Accept' request header is not supported
+    body:
+      type: common.Error
+      example: !include ../examples/traits/error_415.json

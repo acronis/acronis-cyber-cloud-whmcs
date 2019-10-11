@@ -1,0 +1,25 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+get:
+  description: Get the list of applications for a server
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Application type
+              editions:
+                type: string[]
+                description: The list of supported editions
+              tenant_kinds:
+                type: common.TenantKind[]
+                description: List of supported tenant kinds
+          example: !include ../examples/get_applications_response.json

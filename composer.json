@@ -1,0 +1,41 @@
+{
+  "require": {
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-apcu": "*",
+    "ext-apc": "*",
+    "ext-openssl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.7.27",
+    "psr/log": "1.0.2",
+    "monolog/monolog": "1.18.2",
+    "symfony/translation": "v2.8.7",
+    "smarty/smarty": "v3.1.33",
+    "illuminate/database": "v5.2.37",
+    "illuminate/validation": "~5.2",
+    "symfony/yaml": "v2.8.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Acronis\\Cloud\\Client\\": [
+        "src/includes/acroniscloud/vendor/acronis/lib"
+      ],
+      "AcronisCloud\\": [
+        "src/includes/acroniscloud/lib",
+        "tests/includes/acroniscloud/lib"
+      ],
+      "WHMCS\\Module\\Addon\\AcronisCloud\\": [
+        "src/modules/addons/acroniscloud/lib",
+        "tests/modules/addons/acroniscloud/lib"
+      ],
+      "WHMCS\\Module\\Server\\AcronisCloud\\": [
+        "src/modules/servers/acroniscloud/lib",
+        "tests/modules/servers/acroniscloud/lib"
+      ],
+      "Tests\\": [
+        "tests/lib"
+      ]
+    }
+  }
+}

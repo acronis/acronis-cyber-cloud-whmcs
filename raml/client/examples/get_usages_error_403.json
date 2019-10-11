@@ -1,0 +1,7 @@
+{
+  "code": 403,
+  "message": "Unauthorized access to usages",
+  "details": {
+    "product_id": "You do not have enough rights to retrieve usages for this product."
+  }
+}

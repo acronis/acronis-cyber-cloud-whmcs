@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Service template for partners",
+    "description": "Human-readable description that will be displayed to the users",
+    "server_id": 1,
+    "tenant_kind": "partner",
+    "user_role": "admin"
+  },
+  {
+    "id": 3,
+    "name": "Service template for customers",
+    "description": "Human-readable description that will be displayed to the users",
+    "server_id": 2,
+    "tenant_kind": "customer",
+    "user_role": "admin"
+  },
+  {
+    "id": 3,
+    "name": "Service template for customers (user)",
+    "description": "Human-readable description that will be displayed to the users",
+    "server_id": 2,
+    "tenant_kind": "customer",
+    "user_role": "user"
+  }
+]

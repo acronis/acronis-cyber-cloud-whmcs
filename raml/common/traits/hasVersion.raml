@@ -1,0 +1,25 @@
+#%RAML 1.0 Trait
+
+uses:
+  common: ../library.raml
+
+queryParameters:
+  version:
+    description: Object version
+    type: common.Version
+    example: 1
+responses:
+  200:
+    description: Resource successfully upgraded
+    body:
+      type: object
+      properties:
+        version:
+          type: common.Version
+          description: Incremented version
+      example: !include ../examples/version_response.json
+  426:
+    description: The object was updated in another session
+    body:
+      type: common.Error
+      example: !include ../examples/traits/error_426.json

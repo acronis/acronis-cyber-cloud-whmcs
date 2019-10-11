@@ -1,0 +1,10 @@
+{
+  "code": 400,
+  "message": "Bad Request",
+  "details": {
+    "name": "Name is required.",
+    "description": "Description can be long than 1024 characters.",
+    "server_id": "Unknown server 123.",
+    "edition": "Unsupported edition \"super\"."
+  }
+}

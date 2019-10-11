@@ -1,0 +1,81 @@
+[
+  {
+    "name": "storage",
+    "measurement_unit": "bytes",
+    "application_type": "backup",
+    "edition": "standard",
+    "resource_type": "cloud",
+    "location_id": "eb4ae804-dfd6-4548-a1f9-23fae84c6cf6",
+    "infra_id": "f4fc369a-bca3-407b-bd5c-ce5fa783cb1c",
+    "capability": "backup",
+    "child_offering_items": [
+      "child_storages"
+    ],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "name": "local_storage",
+    "measurement_unit": "bytes",
+    "application_type": "backup",
+    "edition": null,
+    "resource_type": "local",
+    "location_id": null,
+    "infra_id": null,
+    "capability": null,
+    "child_offering_items": [
+    ],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "name": "workstations",
+    "measurement_unit": "quantity",
+    "application_type": "backup",
+    "edition": "standard",
+    "resource_type": "data",
+    "location_id": null,
+    "infra_id": null,
+    "capability": null,
+    "child_offering_items": [
+    ],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "name": "compute_points",
+    "measurement_unit": "seconds",
+    "application_type": "backup",
+    "edition": "standard",
+    "resource_type": "cloud",
+    "location_id": "eb4ae804-dfd6-4548-a1f9-23fae84c6cf6",
+    "infra_id": "3385d1c2-6dcf-43c2-8977-80379ea98548",
+    "capability": "disaster_recovery",
+    "child_offering_items": [],
+    "tenant_kinds": [
+      "partner",
+      "customer"
+    ]
+  },
+  {
+    "name": "child_storages",
+    "measurement_unit": "feature",
+    "application_type": "backup",
+    "edition": "standard",
+    "resource_type": "cloud",
+    "location_id": null,
+    "infra_id": null,
+    "capability": null,
+    "child_offering_items": [
+    ],
+    "tenant_kinds": [
+      "partner"
+    ]
+  }
+]

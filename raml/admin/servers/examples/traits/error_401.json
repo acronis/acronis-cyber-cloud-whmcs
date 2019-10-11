@@ -1,0 +1,7 @@
+{
+  "code": 401,
+  "message": "Bad Request",
+  "details": {
+    "server_id": "Invalid credentials for server 123."
+  }
+}

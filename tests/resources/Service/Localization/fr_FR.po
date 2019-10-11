@@ -1,0 +1,5 @@
+msgid "First message"
+msgstr "First translation"
+
+msgid "Second message"
+msgstr "Second translation"

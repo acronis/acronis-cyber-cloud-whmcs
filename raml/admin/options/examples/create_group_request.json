@@ -1,0 +1,6 @@
+{
+  "name": "Group name",
+  "description": "Human-readable description that will be displayed to the users",
+  "server_id": 1,
+  "edition": "standard"
+}

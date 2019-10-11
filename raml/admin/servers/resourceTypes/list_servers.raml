@@ -1,0 +1,28 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+get:
+  description: Get the list of servers
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: common.Id
+                description: Unique identifier
+              name:
+                type: string
+                description: Human-readable name that will be displayed to the users
+              hostname:
+                type: string
+                description: Server hostname
+              status:
+                type: common.Status
+                description: Server status (is enabled or disabled)
+          example: !include ../examples/list_servers_response.json

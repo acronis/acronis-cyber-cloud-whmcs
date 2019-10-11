@@ -1,0 +1,54 @@
+{
+  "login": "admin",
+  "email": "admin@clientdomain.com",
+  "tenant_kind": "customer",
+  "notifications": [
+    {
+      "application_type": "backup",
+      "items": [
+        {
+          "type": "backup_info",
+          "status": "active"
+        },
+        {
+          "type": "backup_success",
+          "status": "active"
+        },
+        {
+          "type": "backup_warning",
+          "status": "active"
+        },
+        {
+          "type": "backup_critical",
+          "status": "inactive"
+        },
+        {
+          "type": "backup_failure",
+          "status": "active"
+        },
+        {
+          "type": "backup_daily_report",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "application_type": "platform",
+      "items": [
+        {
+          "type": "maintenance",
+          "status": "inactive"
+        },
+        {
+          "type": "quota",
+          "status": "active"
+        },
+        {
+          "type": "reports",
+          "status": "active"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

@@ -1,0 +1,21 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+get:
+  description: Returns the current client's info and notifications
+  responses:
+    200:
+      body:
+        application/json:
+          type: object
+          properties:
+            login: string
+            email: string
+            tenant_kind: common.TenantKind
+            notifications?:
+              type: array
+              items: !include ../types/Notification.raml
+            version?: common.Version
+          example: !include ../examples/get_details_response.json

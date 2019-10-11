@@ -1,0 +1,18 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: ../library.raml
+
+get:
+  description: Get localizations for cloud items (like applications, offering items etc)
+  responses:
+    200:
+      body:
+        application/json:
+          type: object
+          properties:
+            applications: common.DictInfo
+            editions: common.DictInfo
+            offering_items: common.DictStrings
+            notifications: common.DictStrings
+          example: !include ../examples/l10n_response.json

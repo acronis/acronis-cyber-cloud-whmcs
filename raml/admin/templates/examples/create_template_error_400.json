@@ -1,0 +1,11 @@
+{
+  "code": 400,
+  "message": "Bad request",
+  "details": {
+    "id": "You cannot specify ID for a new template.",
+    "name": "Name mast be present.",
+    "description": "Lengths of the description should be less than 1024 characters.",
+    "server_id": "Unknown server 123.",
+    "tenant_kind": "Unsupported tenant kind \"root\"."
+  }
+}

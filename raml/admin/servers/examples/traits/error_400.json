@@ -1,0 +1,7 @@
+{
+  "code": 400,
+  "message": "Bad request",
+  "details": {
+    "server_id": "Server ID must be integer."
+  }
+}

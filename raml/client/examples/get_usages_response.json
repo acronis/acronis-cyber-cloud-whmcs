@@ -1,0 +1,72 @@
+[
+  {
+    "application_type": "backup",
+    "offering_items": [
+      {
+        "name": "universal_devices",
+        "measurement_unit": "quantity",
+        "usage_value": 0,
+        "quota_value": null
+      },
+      {
+        "name": "workstations",
+        "measurement_unit": "quantity",
+        "usage_value": 1,
+        "quota_value": null
+      },
+      {
+        "name": "servers",
+        "measurement_unit": "quantity",
+        "usage_value": 0,
+        "quota_value": 10
+      },
+      {
+        "name": "win_server_essentials",
+        "measurement_unit": "quantity",
+        "usage_value": 5,
+        "quota_value": 10
+      },
+      {
+        "name": "virtualhosts",
+        "measurement_unit": "quantity",
+        "usage_value": 10,
+        "quota_value": 10
+      },
+      {
+        "name": "vms",
+        "measurement_unit": "quantity",
+        "usage_value": 15,
+        "quota_value": 10
+      },
+      {
+        "name": "storage",
+        "measurement_unit": "bytes",
+        "usage_value": 1099511627776,
+        "quota_value": 10995116277760
+      },
+      {
+        "name": "dr_storage",
+        "measurement_unit": "bytes",
+        "usage_value": 102005473280,
+        "quota_value": 107374182400
+      },
+      {
+        "name": "compute_points",
+        "measurement_unit": "seconds",
+        "usage_value": 7200,
+        "quota_value": 36000
+      }
+    ]
+  },
+  {
+    "application_type": "files_cloud",
+    "offering_items": [
+      {
+        "name": "fc_storage",
+        "measurement_unit": "bytes",
+        "usage_value": 10737418240,
+        "quota_value": 10737418240
+      }
+    ]
+  }
+]

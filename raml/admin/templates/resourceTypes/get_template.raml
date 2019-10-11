@@ -1,0 +1,16 @@
+#%RAML 1.0 ResourceType
+
+get:
+  description: Get tempate details
+  responses:
+    200:
+      body:
+        application/json:
+          type: !include ../types/Template.raml
+          properties:
+            applications:
+              type: array
+              items:
+                type: !include ../types/Application.raml
+              description: The list of supported offering items
+          example: !include ../examples/get_template_details_response.json

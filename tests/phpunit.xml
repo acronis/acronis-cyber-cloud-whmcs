@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+  -->
+
+<phpunit bootstrap="bootstrap.php">
+    <filter>
+      <whitelist>
+          <directory suffix=".php">./../src/includes/acroniscloud/lib</directory>
+          <directory suffix=".php">./../src/modules/servers/acroniscloud/lib</directory>
+      </whitelist>
+    </filter>
+</phpunit>

@@ -1,0 +1,136 @@
+{
+  "applications": {
+    "platform": {
+      "title": "Management Portal"
+    },
+    "backup": {
+      "title": "Backup & Disaster Recovery",
+      "description": "Backup and recovery of physical and virtual machines, files, databases, and other data to local or cloud."
+    },
+    "files_cloud": {
+      "title": "File Sync & Share",
+      "description": "Provides file-sharing capabilities, enabling users to store, synchronize, and share encrypted content in the cloud and across their devices."
+    },
+    "hci": {
+      "title": "Cyber Infrastructure SPLA",
+      "description": "Enables service providers to use a Service Provider License Agreement (SPLA) for Acronis Software-Defined Infrastructure, instead of a license key."
+    },
+    "physical_data_shipping": {
+      "title": "Physical Data Shipping",
+      "description": "Enables users to send data to the cloud data center on a hard disk drive instead of transferring the data over the Internet."
+    },
+    "notary": {
+      "title": "Notary",
+      "description": "Enables users to notarize and verify files by using the Blockchain technology, and sign files electronically."
+    }
+  },
+  "editions": {
+    "standard": {
+      "title": "Standard Edition",
+      "description": "Provides backup and recovery functionality that covers small environment needs."
+    },
+    "advanced": {
+      "title": "Advanced Edition",
+      "description": "Provides backup and recovery functionality designed for big environments. It is dedicated to protect advanced workloads such as Microsoft Exchange and Microsoft SQL cluster, and provides group management and plan management."
+    },
+    "disaster_recovery": {
+      "title": "Disaster Recovery Edition",
+      "description": "Provides the disaster recovery functionality along with the advanced backup and recovery functionality. It is designed for companies that have high requirements for the Recovery Time Objective and needs in advanced backup and recovery functionality."
+    }
+  },
+  "offering_items": {
+    "universal_devices": "Universal",
+    "workstations": "Workstations",
+    "servers": "Servers",
+    "win_server_essentials": "Windows Server Essentials",
+    "virtualhosts": "Virtual hosts",
+    "vms": "Virtual machines",
+    "mobiles": "Mobile devices",
+    "mailboxes": "Office 365 seats",
+    "o365_mailboxes": "Mailboxes",
+    "o365_onedrive": "OneDrive",
+    "o365_sharepoint_sites": "Office 365 SharePoint Online",
+    "gsuite_seats": "G Suite seats",
+    "google_mail": "Gmail (incl. Calendar, Contacts)",
+    "google_drive": "Google Drive",
+    "google_team_drive": "G Suite Shared Drive",
+    "web_hosting_servers": "Web hosting servers",
+    "websites": "Websites",
+    "storage": "Backup  storage",
+    "child_storages": "Partner-owned backup storage",
+    "dr_child_storages": "Partner-owned disaster recovery infrastructure",
+    "dr_storage": "Disaster recovery storage",
+    "compute_points": "Compute points",
+    "public_ips": "Public IP addresses",
+    "dr_cloud_servers": "Cloud servers",
+    "dr_internet_access": "Internet access",
+
+    "adv_universal_devices": "Universal",
+    "adv_workstations": "Workstations",
+    "adv_servers": "Servers",
+    "adv_win_server_essentials": "Windows Server Essentials",
+    "adv_virtualhosts": "Virtual hosts",
+    "adv_vms": "Virtual machines",
+    "adv_mobiles": "Mobile devices",
+    "adv_o365_seats": "Office 365 seats",
+    "adv_o365_mailboxes": "Mailboxes",
+    "adv_o365_onedrive": "OneDrive",
+    "adv_o365_sharepoint_sites": "Office 365 SharePoint Online",
+    "adv_gsuite_seats": "G Suite seats",
+    "adv_google_mail": "Gmail (incl. Calendar, Contacts)",
+    "adv_google_drive": "Google Drive",
+    "adv_google_team_drive": "G Suite Shared Drive",
+    "adv_web_hosting_servers": "Web hosting servers",
+    "adv_websites": "Websites",
+    "adv_storage": "Backup storage",
+    "adv_child_storages": "Partner-owned backup storage",
+
+    "dre_universal_devices": "Universal",
+    "dre_workstations": "Workstations",
+    "dre_servers": "Servers",
+    "dre_win_server_essentials": "Windows Server Essentials",
+    "dre_virtualhosts": "Virtual hosts",
+    "dre_vms": "Virtual machines",
+    "dre_mobiles": "Mobile devices",
+    "dre_o365_seats": "Office 365 seats",
+    "dre_o365_mailboxes": "Mailboxes",
+    "dre_o365_onedrive": "OneDrive",
+    "dre_o365_sharepoint_sites": "Office 365 SharePoint Online",
+    "dre_gsuite_seats": "G Suite seats",
+    "dre_google_mail": "Gmail (incl. Calendar, Contacts)",
+    "dre_google_drive": "Google Drive",
+    "dre_google_team_drive": "G Suite Shared Drive",
+    "dre_web_hosting_servers": "Web hosting servers",
+    "dre_websites": "Websites",
+    "dre_storage": "Backup storage",
+    "dre_child_storages": "Partner-owned backup storage",
+    "dre_dr_child_storages": "Partner-owned disaster recovery infrastructure",
+    "dre_dr_storage": "Disaster recovery storage",
+    "dre_compute_points": "Compute points",
+    "dre_public_ips": "Public IP addresses",
+    "dre_dr_cloud_servers": "Cloud servers",
+    "dre_dr_internet_access": "Internet access",
+
+    "local_storage": "Local backup",
+
+    "fc_child_storages": "Partner-owned cloud storage",
+    "fc_seats": "Users",
+    "fc_storage": "Cloud storage",
+
+    "drives_shipped_to_cloud": "To the cloud",
+    "drives_shipped_from_cloud": "From the cloud",
+
+    "notary_storage": "Notary storage",
+    "notarizations": "Notarizations",
+    "esignatures": "eSignatures"
+  },
+  "notifications": {
+    "backup_error": "Failure",
+    "backup_warning": "Warning",
+    "backup_info": "Success",
+    "backup_daily_report": "Daily recap about active alerts",
+    "platform": "Management Portal",
+    "quota": "Quota overuse",
+    "reports": "Scheduled usage reports"
+  }
+}

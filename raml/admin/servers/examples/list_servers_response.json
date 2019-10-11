@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Acronis Cloud",
+    "hostname": "cloud.acronis.com",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "name": "Acronis Cloud (beta)",
+    "hostname": "beta-cloud.acronis.com",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "name": "Acronis Cloud (branded)",
+    "hostname": "branded-cloud.com",
+    "status": "inactive"
+  }
+]

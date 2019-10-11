@@ -1,0 +1,25 @@
+#%RAML 1.0 DataType
+
+uses:
+  common: /common/library.raml
+
+type: object
+properties:
+  id:
+    type: common.Id
+    description: Template ID
+  name:
+    type: string
+    description: Human-readable name that will be displayed to the users
+  description:
+    type: string
+    description: Human-readable description that will be displayed to the users
+  server_id:
+    type: common.Id
+    description: Server ID
+  tenant_kind:
+    type: common.TenantKind
+    description: Tenant kind
+  user_role:
+    type: common.UserRole
+    description: User role

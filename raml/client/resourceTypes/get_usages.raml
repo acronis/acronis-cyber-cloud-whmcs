@@ -1,0 +1,42 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+get:
+  description: Returns the current client's usage per offering item for each application
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items:
+            type: object
+            properties:
+              application_type: common.ApplicationType
+              offering_items:
+                type: array
+                description: The list of usage for each offering item.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Offering item name
+                    measurement_unit:
+                      type: common.MeasurmentUnit
+                      description: Items, used for offering item amount measurment.
+                    usage_value:
+                      type: integer
+                      minimum: 0
+                      description: Used amout of offering item (in measurment units).
+                    quota_value:
+                      type: common.QuotaValue | nil
+                      description: Available amout of offering item (in measurment units).
+          example: !include ../examples/get_usages_response.json
+    403:
+      description: The user needs to be a partner be able to retrieve usages for this product
+      body:
+        application/json:
+          type: common.Error
+          example: !include ../examples/get_usages_error_403.json

@@ -1,0 +1,2 @@
+msgid "Test message with numbers 123456."
+msgstr "Testnachricht mit den Nummern 123456."

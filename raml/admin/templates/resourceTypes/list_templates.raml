@@ -1,0 +1,11 @@
+#%RAML 1.0 ResourceType
+
+get:
+  description: Get the list of servers
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items: !include ../types/Template.raml
+          example: !include ../examples/list_templates_response.json

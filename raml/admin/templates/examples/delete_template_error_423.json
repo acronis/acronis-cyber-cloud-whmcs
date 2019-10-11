@@ -1,0 +1,7 @@
+{
+  "code": 423,
+  "message": "Template is locked",
+  "details": {
+    "template_id": "Template 1 cannot be deleted due it is used for product 2."
+  }
+}

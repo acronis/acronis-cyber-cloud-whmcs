@@ -1,0 +1,16 @@
+logger:
+  enabled: false
+  filename: /var/log/acroniscloud/acronis-cloud.log
+  level: DEBUG
+  max_message_length: 1000
+cloud_api:
+  verify_ssl: true
+  access_token_ttl: 7200
+cache:
+  enabled: false
+  default_ttl: 0
+  namespace: acroniscloud
+  # To force APCu specify apcu, now it detects
+  storage_type: null
+product:
+  overage_ratio: 1.0

@@ -1,0 +1,20 @@
+#%RAML 1.0 Trait
+
+uses:
+  common: /common/library.raml
+
+queryParameters:
+  server_id:
+    type: integer
+    minimum: 1
+responses:
+  400:
+    description: The query parameter has invalid format
+    body:
+      type: common.Error
+      example: !include ../examples/traits/error_400.json
+  404:
+    description: Cannot find the server
+    body:
+      type: common.Error
+      example: !include ../examples/traits/error_404.json

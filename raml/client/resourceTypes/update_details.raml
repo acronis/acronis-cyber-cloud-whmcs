@@ -1,0 +1,11 @@
+#%RAML 1.0 ResourceType
+post:
+  description: Set the current client's notifications
+  body:
+    application/json:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items: !include ../types/Notification.raml
+      example: !include ../examples/update_details_request.json

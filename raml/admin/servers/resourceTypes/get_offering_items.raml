@@ -1,0 +1,44 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+get:
+  description: Get the list of offering items for a server
+  responses:
+    200:
+      body:
+        application/json:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Offering item name
+              measurement_unit:
+                type: common.MeasurmentUnit
+                description: The kind of measurement units
+              application_type: common.ApplicationType
+              tenant_kinds:
+                type: common.TenantKind[]
+                description: List of supported tenant kinds
+              edition:
+                type: string | nil
+                description: Edition name
+              resource_type:
+                type: common.ResourceType
+                description: Offering item resource type
+              location_id:
+                type: common.Uuid | nil
+                description: Location ID
+              infra_id:
+                type: common.Uuid | nil
+                description: Infrastructure component ID
+              capability:
+                type: string | nil
+                description: Infrastructure compponent capability
+              child_offering_items:
+                type: string[]
+                description: The list of child offering items
+          example: !include ../examples/get_offering_items_response.json

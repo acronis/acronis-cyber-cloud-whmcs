@@ -1,0 +1,2 @@
+msgid "TEST MESSAGE ALL CAPS"
+msgstr "テストメッセージすべて大文字"

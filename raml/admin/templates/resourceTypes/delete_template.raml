@@ -1,0 +1,16 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+post:
+  description: Delete a tempate
+  responses:
+    204:
+      description: Successfully deleted
+    423:
+      description: The template cannot be deleted due it is used for products
+      body:
+        application/json:
+          type: common.Error
+          example: !include ../examples/delete_template_error_423.json

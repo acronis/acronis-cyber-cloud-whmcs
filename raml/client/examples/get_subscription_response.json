@@ -1,0 +1,9 @@
+{
+  "name": "Acronis Backup",
+  "status": "active",
+  "registration_date": "2018-10-22T20:00:00Z",
+  "due_date": "2020-10-22T20:00:00Z",
+  "billing_cycle": "monthly",
+  "billing_amount": 25.00,
+  "payment_method": "Payment Express"
+}

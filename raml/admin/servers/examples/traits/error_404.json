@@ -1,0 +1,7 @@
+{
+  "code": 404,
+  "message": "Not found",
+  "details": {
+    "server_id": "Cannot find a server by ID 123."
+  }
+}

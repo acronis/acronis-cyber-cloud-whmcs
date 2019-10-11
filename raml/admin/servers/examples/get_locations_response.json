@@ -1,0 +1,49 @@
+[
+  {
+    "location_id": "eb4ae804-dfd6-4548-a1f9-23fae84c6cf6",
+    "name": "US Location",
+    "infras": [
+      {
+        "infra_id": "f4fc369a-bca3-407b-bd5c-ce5fa783cb1c",
+        "name": "Acronis storage",
+        "capabilities": [
+          "backup"
+        ]
+      },
+      {
+        "infra_id": "3385d1c2-6dcf-43c2-8977-80379ea98548",
+        "name": "Acronis Disaster Recovery storage",
+        "capabilities": [
+          "disaster_recovery"
+        ]
+      },
+      {
+        "infra_id": "6bfc59d5-b53a-43f6-88b1-e90d1a2fea6a",
+        "name": "Acronis Sync&Share storage",
+        "capabilities": [
+          "files_cloud"
+        ]
+      },
+      {
+        "infra_id": "592b32b8-92ef-4b58-a98b-9ed285bff6e6",
+        "name": "Google storage",
+        "capabilities": [
+          "backup"
+        ]
+      }
+    ]
+  },
+  {
+    "location_id": "0f2d3c1b-9c86-4e44-bcb6-3bbf1d62d114",
+    "name": "EU Location",
+    "infras": [
+      {
+        "infra_id": "1e63eab5-29ec-4409-bceb-de5b47ee203b",
+        "name": "Acronis storage",
+        "capabilities": [
+          "backup"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,181 @@
+#%RAML 1.0
+title: REST API v1 description for WHMCS module
+version: v1
+mediaType: application/json
+
+protocols:
+  - HTTPS
+
+baseUri: https://{host}:{port}/
+baseUriParameters:
+  host:
+    displayName: Domain name / IP address
+    type: string
+    default: localhost
+    example: localhost
+  port:
+    displayName: Port
+    type: integer
+    default: 443
+    example: 443
+
+securitySchemes:
+  session:
+    type: x-whmcs-login
+    settings:
+      authorizationGrants: [ Cookie ]
+    describedBy:
+      headers:
+        Cookie:
+          type: string
+          example: WHMCSy551iLvnhYt7=6q1ui8bmt8bjcqh588n6f064d7
+      responses:
+        302:
+          description: The request was redirected due to an invalid session token
+          headers:
+            Location:
+              type: string
+              example: http://localhost/admin/login.php
+
+securedBy:
+   - session
+
+uses:
+  common: common/library.raml
+
+# not inlined because of https://github.com/raml-org/raml-spec/issues/321
+resourceTypes:
+  # admin/servers
+  admin/servers/list_servers: !include admin/servers/resourceTypes/list_servers.raml
+  admin/servers/get_applications: !include admin/servers/resourceTypes/get_applications.raml
+  admin/servers/get_offering_items: !include admin/servers/resourceTypes/get_offering_items.raml
+  admin/servers/get_locations: !include admin/servers/resourceTypes/get_locations.raml
+  # admin/templates
+  admin/templates/list_templates: !include admin/templates/resourceTypes/list_templates.raml
+  admin/templates/get_template: !include admin/templates/resourceTypes/get_template.raml
+  admin/templates/create_template: !include admin/templates/resourceTypes/create_template.raml
+  admin/templates/update_template: !include admin/templates/resourceTypes/update_template.raml
+  admin/templates/delete_template: !include admin/templates/resourceTypes/delete_template.raml
+  # admin/options
+  admin/options/create_options: !include admin/options/resourceTypes/create_options.raml
+  # client
+  client/get_details: !include client/resourceTypes/get_details.raml
+  client/update_details: !include client/resourceTypes/update_details.raml
+  client/get_subscription: !include client/resourceTypes/get_subscription.raml
+  client/get_usages: !include client/resourceTypes/get_usages.raml
+  # properties
+  properties/l10n: !include common/resourceTypes/l10n.raml
+
+traits:
+  isAdminReques:
+    queryParameters:
+      module:
+        type: string
+        enum:
+          - acroniscloud
+
+  isClientRequest:
+    queryParameters:
+      action:
+        type: string
+        enum:
+          - productdetails
+      id:
+        type: integer
+        minimum: 1
+      modop:
+        type: string
+        enum:
+          - custom
+
+  # admin/servers
+  hasInvalidServerCredentials: !include admin/servers/traits/hasInvalidServerCredentials.raml
+  hasQueryParameterServerId: !include admin/servers/traits/hasQueryParameterServerId.raml
+
+  # admin/templates
+  hasQueryParameterTemplateId: !include admin/templates/traits/hasQueryParameterTemplateId.raml
+
+  # common
+  hasUnsupportedMediaType: !include common/traits/hasUnsupportedMediaType.raml
+  hasVersion: !include common/traits/hasVersion.raml
+
+/admin/addonmodules.php:
+  is:
+    - isAdminReques
+    - hasUnsupportedMediaType
+
+  /?action=list_servers:
+    type: admin/servers/list_servers
+
+  /?action=get_applications:
+    is:
+      - hasInvalidServerCredentials
+      - hasQueryParameterServerId
+    type: admin/servers/get_applications
+
+  /?action=get_offering_items:
+    is:
+      - hasInvalidServerCredentials
+      - hasQueryParameterServerId
+    type: admin/servers/get_offering_items
+
+  /?action=get_locations:
+    is:
+      - hasInvalidServerCredentials
+      - hasQueryParameterServerId
+    type: admin/servers/get_locations
+
+  /?action=list_templates:
+    type: admin/templates/list_templates
+
+  /?action=create_template:
+    is:
+      - hasInvalidServerCredentials
+    type: admin/templates/create_template
+
+  /?action=get_template:
+    is:
+      - hasInvalidServerCredentials
+      - hasQueryParameterTemplateId
+    type: admin/templates/get_template
+
+  /?action=update_template:
+    is:
+      - hasInvalidServerCredentials
+      - hasQueryParameterTemplateId
+    type: admin/templates/update_template
+
+  /?action=delete_template:
+    is:
+      - hasQueryParameterTemplateId
+    type: admin/templates/delete_template
+
+  /?action=create_options:
+    is:
+      - hasInvalidServerCredentials
+    type: admin/options/create_options
+
+  /?action=l10n:
+    type: properties/l10n
+
+/clientarea.php:
+  is:
+    - isClientRequest
+    - hasUnsupportedMediaType
+
+  /?a=get_details:
+    type: client/get_details
+
+  /?a=update_details:
+    is:
+      - hasVersion
+    type: client/update_details
+
+  /?a=get_subscription:
+    type: client/get_subscription
+
+  /?a=get_usages:
+    type: client/get_usages
+
+  /?a=l10n:
+    type: properties/l10n

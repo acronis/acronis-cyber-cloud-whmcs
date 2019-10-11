@@ -1,0 +1,18 @@
+#%RAML 1.0 DataType
+
+uses:
+  common: /common/library.raml
+
+type: object
+properties:
+  name:
+    type: string
+  status:
+    type: common.Status
+  measurement_unit:
+    type: common.MeasurmentUnit
+  infra_id:
+    type: common.Uuid | nil
+    description: Infrastructure component ID
+  quota_value:
+    type: integer | nil

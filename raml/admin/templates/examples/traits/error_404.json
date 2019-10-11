@@ -1,0 +1,7 @@
+{
+  "code": 404,
+  "message": "Not found",
+  "details": {
+    "template_id": "Cannot find a template by ID 123."
+  }
+}

@@ -1,0 +1,48 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  common: /common/library.raml
+
+post:
+  description: Create a tempate
+  body:
+    application/json:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable name that will be displayed to the users
+        description?:
+          type: string
+          description: Human-readable description that will be displayed to the users
+        server_id:
+          type: common.Id
+          description: Server ID
+        tenant_kind:
+          type: common.TenantKind
+          description: Tenant kind
+        user_role?:
+          type: common.UserRole
+          description: User role
+        applications:
+          type: array
+          items:
+            type: !include ../types/Application.raml
+      example: !include ../examples/create_template_request.json
+  responses:
+    200:
+      description: Successfully created
+      body:
+        application/json:
+          type: object
+          properties:
+            id:
+              type: common.Id
+              description: Template ID
+          example: !include ../examples/create_template_response.json
+    400:
+      description: The request body has invalid properties
+      body:
+        application/json:
+          type: common.Error
+          example: !include ../examples/create_template_error_400.json

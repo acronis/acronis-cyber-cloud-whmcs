@@ -1,0 +1,45 @@
+#%RAML 1.0 ResourceType
+get:
+  description: Returns the current client's subscription plan
+  responses:
+    200:
+      body:
+        application/json:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Human-readable name that will be displayed to the users
+            status:
+              type: string
+              description: Status, translated client side
+              enum:
+                - active
+                - inactive
+            registration_date:
+              type: datetime
+              description: Registration date
+            due_date:
+              type: datetime
+              description: Next due date
+            billing_cycle:
+              type: string
+              description: Billing cycle of subscription, translated client side
+              enum:
+                - free
+                - onetime
+                - monthly
+                - quarterly
+                - semiannually
+                - annually
+                - biennially
+                - triennially
+            billing_amount:
+              type: number
+              minimum: 0
+              multipleOf: 0.01
+              description: Billing amount of subscription
+            payment_method:
+              type: string
+              description: Payment method
+          example: !include ../examples/get_subscription_response.json
