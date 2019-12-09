@@ -1,3 +1,6 @@
+{**
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
+ *}
 <script>
   (function() {
     var authType = '';
@@ -7,7 +10,7 @@
       if (!childElements.length) {
         return;
       }
-      childElements.forEach(function (childElement) {
+      [].forEach.call(childElements, function (childElement) {
         var field = childElement.parentElement.previousElementSibling;
         field.textContent = label;
       });
@@ -15,8 +18,8 @@
 
     function addHintAfter(selector, isSmall) {
       var hintElement = isSmall ? document.createElement('small') : document.createElement('div');
-      hintElement.classList.add('acronisAuthHint');
-      hintElement.innerText = '{$labels['hint']}';
+      hintElement.setAttribute('class', 'acronisAuthHint');
+      hintElement.innerText = '{$labels['hint']|escape}';
       var inputCell = document.querySelector(selector);
       inputCell.parentElement.appendChild(hintElement);
     }
@@ -29,20 +32,20 @@
         }
         addHintAfter('input[name="password"]', false);
       } else {
-        Array.from(hintElements).forEach(function (e) { e.classList.remove('hidden'); });
+        [].forEach.call(hintElements, function (e) { e.classList.remove('hidden'); });
       }
     }
 
     function hideHint() {
       var hintElements = document.getElementsByClassName('acronisAuthHint');
       if (hintElements.length) {
-        Array.from(hintElements).forEach(function (e) { e.classList.add('hidden'); });
+        [].forEach.call(hintElements, function (e) { e.classList.add('hidden'); });
       }
     }
 
     function createAuthRadioOption(name, value, label) {
       var elLabel = document.createElement('label');
-      elLabel.classList.add('radio-inline');
+      elLabel.setAttribute('class', 'radio-inline');
 
       var input = document.createElement('input');
       input.setAttribute('type', 'radio');
@@ -53,6 +56,8 @@
       }
       input.addEventListener('change', function(event) {
         authType = event.target.value;
+        // select the radio button in the hidden form also (if it exists)
+        [].forEach.call(document.querySelectorAll('input[value="' + authType + '"]'), function (i) { i.checked = true; });
         setClientFields(authType);
       });
       elLabel.appendChild(input);
@@ -65,18 +70,17 @@
 
     function createNewAuthField() {
       var authTypeField = document.createElement('div');
-      authTypeField.classList.add('inputAuthType', 'form-group');
+      authTypeField.setAttribute('class', 'inputAuthType form-group');
 
       var authTypeLabel = document.createElement('label');
-      authTypeLabel.classList.add('col-lg-3', 'col-sm-4', 'control-label');
-      authTypeLabel.textContent = '{$labels['authentication']}';
+      authTypeLabel.setAttribute('class', 'col-lg-3 col-sm-4 control-label');
+      authTypeLabel.textContent = '{$labels['authentication']|escape}';
       authTypeField.appendChild(authTypeLabel);
 
       var authTypeInput = document.createElement('div');
-      authTypeInput.classList.add('col-lg-4', 'col-sm-4');
-      var radioUsername = createAuthRadioOption('auth-type', 'username', '{$labels['username']}');
-      var clientCredentialsLabel = '{$labels['client_id']} ({$labels['recommended']})';
-      var radioClientCredentials = createAuthRadioOption('auth-type', 'client_credentials', clientCredentialsLabel);
+      authTypeInput.setAttribute('class', 'col-lg-4 col-sm-4');
+      var radioUsername = createAuthRadioOption('auth-type', 'username', '{$labels['username']|escape}');
+      var radioClientCredentials = createAuthRadioOption('auth-type', 'client_credentials', '{$labels['client_id_method']|escape}');
       authTypeInput.appendChild(radioUsername);
       authTypeInput.appendChild(radioClientCredentials);
       authTypeField.appendChild(authTypeInput);
@@ -88,17 +92,17 @@
 
     function createOldAuthField() {
       var authTypeField = document.createElement('tr');
-      authTypeField.classList.add('inputAuthType');
+      authTypeField.setAttribute('class', 'inputAuthType');
 
       var authTypeLabel = document.createElement('td');
-      authTypeLabel.classList.add('fieldlabel');
-      authTypeLabel.textContent = '{$labels['authentication']}';
+      authTypeLabel.setAttribute('class', 'fieldlabel');
+      authTypeLabel.textContent = '{$labels['authentication']|escape}';
       authTypeField.appendChild(authTypeLabel);
 
       var authTypeInput = document.createElement('td');
-      authTypeInput.classList.add('fieldarea');
-      var radioUsername = createAuthRadioOption('auth-type', 'username', '{$labels['username']}');
-      var radioClientCredentials = createAuthRadioOption('auth-type', 'client_credentials', '{$labels['client_id']}');
+      authTypeInput.setAttribute('class', 'fieldarea');
+      var radioUsername = createAuthRadioOption('auth-type', 'username', '{$labels['username']|escape}');
+      var radioClientCredentials = createAuthRadioOption('auth-type', 'client_credentials', '{$labels['client_id_method']|escape}');
       authTypeInput.appendChild(radioUsername);
       authTypeInput.appendChild(radioClientCredentials);
       authTypeField.appendChild(authTypeInput);
@@ -111,9 +115,9 @@
     function createAuthTypeFields() {
       var existingFields = document.getElementsByClassName('inputAuthType');
       if (existingFields.length) {
-        Array.from(existingFields).forEach(function (field) { field.classList.remove('hidden'); });
+        [].forEach.call(existingFields, function (field) { field.classList.remove('hidden'); });
         // reset to username when un-hiding
-        document.querySelectorAll('input[value="username"]').forEach(function (i) { i.checked = true; });
+        [].forEach.call(document.querySelectorAll('input[value="username"]'), function (i) { i.checked = true; });
         return;
       }
       if (document.getElementById('addUsername')) {
@@ -126,19 +130,19 @@
       var accessHashFields = document.querySelectorAll('#newToken, #apiToken');
       var accessHashInputs = document.querySelectorAll('#newHash, #serverHash');
       if (mode === 'reset') {
-        accessHashInputs.forEach(function (i) { i.value = ''; });
-        accessHashFields.forEach(function (f) { f.parentElement.parentElement.classList.remove('hidden'); });
+        [].forEach.call(accessHashInputs, function (i) { i.value = ''; });
+        [].forEach.call(accessHashFields, function (f) { f.parentElement.parentElement.classList.remove('hidden'); });
       } else {
-        accessHashInputs.forEach(function (i) { i.value = mode; });
-        accessHashFields.forEach(function (f) { f.parentElement.parentElement.classList.add('hidden'); });
+        [].forEach.call(accessHashInputs, function (i) { i.value = mode; });
+        [].forEach.call(accessHashFields, function (f) { f.parentElement.parentElement.classList.add('hidden'); });
       }
       if (mode === 'client_credentials') {
-        setFieldLabel('#addUsername, input[name="username"]', '{$labels['client_id']}');
-        setFieldLabel('#addPassword, input[name="password"]', '{$labels['client_secret']}');
+        setFieldLabel('#addUsername, input[name="username"]', '{$labels['client_id']|escape}');
+        setFieldLabel('#addPassword, input[name="password"]', '{$labels['client_secret']|escape}');
         hideHint();
       } else {
-        setFieldLabel('#addUsername, input[name="username"]', '{$labels['username']}');
-        setFieldLabel('#addPassword, input[name="password"]', '{$labels['password']}');
+        setFieldLabel('#addUsername, input[name="username"]', '{$labels['username']|escape}');
+        setFieldLabel('#addPassword, input[name="password"]', '{$labels['password']|escape}');
         mode === 'reset' ? hideHint() : showHint();
       }
     }
@@ -154,7 +158,7 @@
         setClientFields(authType);
       } else if (isEvent) {
         var selectAuthTypes = document.getElementsByClassName('inputAuthType');
-        Array.from(selectAuthTypes).forEach(function (at) { at.classList.add('hidden'); });
+        [].forEach.call(selectAuthTypes, function (at) { at.classList.add('hidden'); });
         authType && setClientFields('reset');
         authType = '';
       }
@@ -163,7 +167,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       authType = document.getElementById('serverHash').value;
       var serverTypeSelects = document.querySelectorAll('#addType, #inputServerType');
-      serverTypeSelects.forEach(function (ts) {
+      // workaround for IE11
+      [].forEach.call(serverTypeSelects, function (ts) {
         ts.addEventListener('change', checkServerType);
         if (ts.offsetParent) {
           // selector is visible

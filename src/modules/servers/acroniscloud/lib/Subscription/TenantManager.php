@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace WHMCS\Module\Server\AcronisCloud\Subscription;
@@ -21,10 +21,9 @@ use AcronisCloud\CloudApi\ApiInterface;
 use AcronisCloud\Localization\GetTextTrait;
 use AcronisCloud\Model\WHMCS\Product;
 use AcronisCloud\Service\Database\Repository\RepositoryAwareTrait;
-use AcronisCloud\Service\Language\IsoCode;
-use AcronisCloud\Service\Language\IsoCodeAwareTrait;
 use AcronisCloud\Util\Arr;
 use AcronisCloud\Util\Str;
+use AcronisCloud\Util\WHMCS\Lang;
 use Exception;
 use WHMCS\Module\Server\AcronisCloud\Exception\ProvisioningException;
 use WHMCS\Module\Server\AcronisCloud\Subscription\RequestParameters\Accessor;
@@ -33,7 +32,6 @@ use WHMCS\Module\Server\AcronisCloud\Subscription\RequestParameters\ClientsDetai
 class TenantManager
 {
     use GetTextTrait,
-        IsoCodeAwareTrait,
         RepositoryAwareTrait;
 
     const CUSTOMER_ID_WHMCS_VERSION = 'whmcs-version';
@@ -297,14 +295,9 @@ class TenantManager
     {
         // get client language
         $language = $this->getRequestParameters()->getClientsDetails()->getLanguage();
-        // if client language is not specified (it means to use default setting)
-        if (!$language) {
-            // get default setting for language
-            $language = $this->getRepository()->getConfigurationRepository()->getLanguage();
-            $language = $language ?: IsoCode::NAME_EN;
-        }
 
-        return $this->getLanguageIsoCode()->getCode($language, IsoCode::CODE_EN);
+        // if client language is not specified (it means to use default setting)
+        return $language ? Lang::getLanguageLocale($language) : Lang::LOCALE_EN_US;
     }
 
     /**
@@ -333,10 +326,7 @@ class TenantManager
      */
     public function getTenantParentId()
     {
-        $cloudApi = $this->getCloudApi();
-        $me = $cloudApi->getMe();
-
-        return $me->getTenantId();
+        return $this->getCloudApi()->getRootTenantId();
     }
 
     /**

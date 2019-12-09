@@ -1,15 +1,18 @@
+{**
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
+ *}
 <div id="acronis-cloud-error" style="display: none">
     {if $isAdmin}
     <div class="errorbox">
-        <strong><span class="title">{$errorTitle}</span></strong>
+        <strong><span class="title">{$errorTitle|escape}</span></strong>
         <br>
-        {$errorMessage}
+        {$errorMessage|escape}
     </div>
     {else}
         <div class="alert alert-danger" role="alert">
-            <strong><span class="title">{$errorTitle}</span></strong>
+            <strong><span class="title">{$errorTitle|escape}</span></strong>
             <br>
-            {$errorMessage}
+            {$errorMessage|escape}
         </div>
     {/if}
 </div>

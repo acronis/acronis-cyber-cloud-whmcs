@@ -1,10 +1,11 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Repository\Validation\Template;
 
+use AcronisCloud\CloudApi\ApiInterface;
 use AcronisCloud\Localization\GetTextTrait;
 use AcronisCloud\Model\TemplateApplication;
 use AcronisCloud\Model\TemplateEdition;
@@ -36,11 +37,17 @@ class TemplateOfferingItemRules extends AbstractTemplateRule
     const VALIDATION_PARENT_INACTIVE = 'OfferingItemParentInactive';
     const VALIDATION_STATUS = 'OfferingItemStatus';
     const VALIDATION_INFRA_ID = 'OfferingItemInfraId';
+    const VALIDATION_CUSTOMER_UNIQUE_ITEMS = 'OfferingItemCustomerUnique';
 
     /**
      * @var array
      */
     private $applicationsData;
+
+    /**
+     * @var string
+     */
+    private $tenantKind;
 
     /**
      * @var string[]
@@ -52,9 +59,10 @@ class TemplateOfferingItemRules extends AbstractTemplateRule
      */
     private $infras;
 
-    public function __construct($applicationsData, $allowedOfferingItems, $infras)
+    public function __construct($applicationsData, $tenantKind, $allowedOfferingItems, $infras)
     {
         $this->applicationsData = $applicationsData;
+        $this->tenantKind = $tenantKind;
         $this->allowedOfferingItems = $allowedOfferingItems;
         $this->infras = $infras;
     }
@@ -77,6 +85,7 @@ class TemplateOfferingItemRules extends AbstractTemplateRule
                 $this->buildValidation(static::VALIDATION_STATUS, 'Offering item status must be either "active" or "inactive".'),
                 $this->buildValidation(static::VALIDATION_INFRA_ID, 'Offering item has infra id that doesn\'t exist in Cloud.'),
                 $this->buildValidation(static::VALIDATION_PARENT_INACTIVE, 'Offering item is a child of an offering item that is inactive or missing.'),
+                $this->buildValidation(static::VALIDATION_CUSTOMER_UNIQUE_ITEMS, 'Only one infrastructure component can be enabled for a tenant of the "Customer" type.'),
             ];
         });
     }
@@ -93,6 +102,9 @@ class TemplateOfferingItemRules extends AbstractTemplateRule
     protected function validateOfferingItems($offeringItems, $application)
     {
         try {
+            if ($this->tenantKind === ApiInterface::TENANT_KIND_CUSTOMER) {
+                $this->validateUniqueOINames($offeringItems, $application);
+            }
             foreach ($offeringItems as $offeringItem) {
                 $this->validateFormat($offeringItem, $application);
                 $this->validateOIAllowed($offeringItem, $application);
@@ -105,6 +117,27 @@ class TemplateOfferingItemRules extends AbstractTemplateRule
             }
         } catch (ValidationException $e) {
             $this->setFailure($e->getErrorName(), ...$e->getData());
+        }
+    }
+
+    /**
+     * @param $offeringItems
+     * @param $application
+     * @throws ValidationException
+     */
+    protected function validateUniqueOINames($offeringItems, $application)
+    {
+        $nameFlags = [];
+        foreach ($offeringItems as $offeringItem) {
+            if ($offeringItem[TemplateOfferingItem::COLUMN_STATUS] === TemplateOfferingItem::STATUS_INACTIVE) {
+                continue;
+            }
+
+            $offeringItemName = $offeringItem[TemplateOfferingItem::COLUMN_NAME];
+            if (isset($nameFlags[$offeringItemName])) {
+                throw new ValidationException(static::VALIDATION_CUSTOMER_UNIQUE_ITEMS, [$application, $offeringItem]);
+            }
+            $nameFlags[$offeringItemName] = true;
         }
     }
 

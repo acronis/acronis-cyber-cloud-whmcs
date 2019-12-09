@@ -1,12 +1,12 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Localization;
 
 use AcronisCloud\Service\FactoryInterface;
-use AcronisCloud\Util\Arr;
+use AcronisCloud\Util\WHMCS\Lang;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -15,7 +15,6 @@ class TranslatorFactory implements FactoryInterface
     const NAME = 'l10n';
 
     const FILE_FORMAT = 'po';
-    const LOCALE_EN_US = 'en_US';
 
     /**
      * @return Translator
@@ -35,6 +34,14 @@ class TranslatorFactory implements FactoryInterface
     }
 
     /**
+     * @return string
+     */
+    protected function getLocale()
+    {
+        return Lang::getLocale();
+    }
+
+    /**
      * @return array
      */
     private function getTranslations()
@@ -47,13 +54,5 @@ class TranslatorFactory implements FactoryInterface
         }
 
         return $translations;
-    }
-
-    private function getLocale()
-    {
-        global $_ADMINLANG;
-
-        // TODO: investigate how to get locale for Client Area
-        return Arr::get($_ADMINLANG, 'locale', static::LOCALE_EN_US);
     }
 }

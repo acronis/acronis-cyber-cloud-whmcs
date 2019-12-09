@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\CloudApi;
@@ -55,6 +55,25 @@ abstract class BaseApi
         return $this->memoize(function () {
             return $this->createApiClient($this->getServerUrl());
         });
+    }
+
+    /**
+     * @param callable $fn
+     * @param array $data
+     * @param int $chunkSize
+     * @return mixed
+     */
+    protected function batchRun(callable $fn, $data, $chunkSize = 100)
+    {
+        $chunks = array_chunk($data, $chunkSize, true);
+
+        $result = [];
+        foreach ($chunks as $chunk) {
+            $chunkResult = $fn($chunk);
+            $result = array_merge($result, $chunkResult);
+        }
+
+        return $result;
     }
 
     private function getUserAgent()

@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Repository;
@@ -44,7 +44,7 @@ class TemplateRepository extends AbstractRepository
     public function update(array $data, $id)
     {
         /** @var Template $model*/
-        $model = static::find($id);
+        $model = $this->find($id);
         if (!$model) {
             throw new \Exception(Str::format(
                 'Cannot update template: No model was found with Id "%s"',
@@ -54,10 +54,15 @@ class TemplateRepository extends AbstractRepository
         $applications = $this->extractApplications($data);
 
         $appIdColumn = TemplateApplication::COLUMN_ID;
-        $model->update([
+        $templateInfoUpdate = [
             Template::COLUMN_NAME => $data[Template::COLUMN_NAME],
             Template::COLUMN_DESCRIPTION => $data[Template::COLUMN_DESCRIPTION],
-        ]);
+        ];
+        if (!$model->server()) {
+            $templateInfoUpdate[Template::COLUMN_SERVER_ID] = $data[Template::COLUMN_SERVER_ID];
+        }
+        $model->update($templateInfoUpdate);
+
         $model->applications()->whereNotIn($appIdColumn, array_column($applications, $appIdColumn))->delete();
         foreach ($applications as $application) {
             /** @var TemplateApplication $appModel */

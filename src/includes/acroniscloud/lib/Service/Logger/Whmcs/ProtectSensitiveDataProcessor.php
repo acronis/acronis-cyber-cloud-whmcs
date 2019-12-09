@@ -1,18 +1,19 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Logger\Whmcs;
 
 use AcronisCloud\Util\Arr;
+use AcronisCloud\Util\Str;
 
 class ProtectSensitiveDataProcessor
 {
     const REPLACEMENT = '*****';
     const PROTECTED_TEXTS = [
         '/((?:password|jwt|token)=)(.*?)(&|$)/mi' => '${1}' . self::REPLACEMENT . '${3}', // json
-        '/((?:password|jwt|token)"\s*:\s*")(.*?)((?<!\\\\)")/mi' => '${1}' . self::REPLACEMENT . '${3}', // url
+        '/((?:password|jwt|token|client_secret)"\s*:\s*")(.*?)((?<!\\\\)")/mi' => '${1}' . self::REPLACEMENT . '${3}', // url
         '/(authorization:\s*(?:bearer|basic)\s+)(.*)/mi' => '${1}' . self::REPLACEMENT, // http header
         '/((?:set-)?cookie:\s*)(.*)/mi' => '${1}' . self::REPLACEMENT, // http header
     ];
@@ -33,6 +34,8 @@ class ProtectSensitiveDataProcessor
                 return $this->protectWhmcsApi($record);
             case ScopeCloudApiFormatter::NAME:
                 return $this->protectCloudApi($record);
+            case ScopeDbQueryFormatter::NAME:
+                return $this->protectDBQuery($record);
         }
 
         return $record;
@@ -54,6 +57,13 @@ class ProtectSensitiveDataProcessor
         if (isset($record['context']['response'])) {
             $this->protectEntry($record['context']['response']);
         }
+
+        return $record;
+    }
+
+    private function protectDBQuery(array $record)
+    {
+        $this->protectBindings($record['context']);
 
         return $record;
     }
@@ -91,6 +101,21 @@ class ProtectSensitiveDataProcessor
             }
 
             $this->replaceProperties($value);
+        }
+    }
+
+    private function protectBindings(&$statement)
+    {
+        if (!isset($statement['query']) || !isset($statement['bindings'])) {
+            return;
+        }
+
+        preg_match_all('/`?(?P<parameters>[a-zA-Z]+)`?\s=\s\\?/u', $statement['query'], $bindings);
+
+        foreach ($bindings['parameters'] as $position => $paramName) {
+            if (Arr::has(static::PROTECTED_PROPERTIES, $paramName)) {
+                $statement['bindings'][$position] = self::REPLACEMENT;
+            }
         }
     }
 }

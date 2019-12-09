@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Cache;
@@ -49,14 +49,6 @@ class ApcuCacheStorage implements CacheInterface
     public function get($key, $default = null)
     {
         return $this->apcuCache->get($this->formatKey($key), $default);
-    }
-
-    /** {@inheritdoc} */
-    public function refresh($key, $ttl = null)
-    {
-        return $this->apcuCache->refresh(
-            $this->formatKey($key), is_null($ttl) ? $this->defaultTtl : $ttl
-        );
     }
 
     /** {@inheritdoc} */

@@ -1,5 +1,8 @@
+{**
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
+ *}
 <noscript>
-    <strong>{{$noScriptInfo}}</strong>
+    <strong>{{$noScriptInfo|escape}}</strong>
 </noscript>
 
 <script>

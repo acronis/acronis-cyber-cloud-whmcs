@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 use AcronisCloud\Service\BuildInfo\BuildInfoFactory;
@@ -22,7 +22,6 @@ return [
     CacheFactory::NAME => new CacheFactory(),
     ConfigFactory::NAME => new ConfigFactory(),
     DispatcherFactory::NAME => new DispatcherFactory(),
-    IsoCodeFactory::NAME => new IsoCodeFactory(),
     LoggerFactory::NAME => new LoggerFactory(),
     MetaInfoFactory::NAME => new MetaInfoFactory(),
     RepositoryFactory::NAME => new RepositoryFactory(),

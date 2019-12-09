@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Repository\Validation\Template;
@@ -174,6 +174,22 @@ class TemplateValidatorTest extends \PHPUnit_Framework_TestCase
                 false,
                 ['applications' => [
                     'Offering item measurement unit is not the same as in meta info. Details: {"application":"backup","offering_item":{"name":"universal_devices","measurement_unit":"bytes","quota_value":10,"status":"active","infra_id":"1234"},"metaInfo":{"application_type":"backup","edition_name":"standard","offering_item_name":"universal_devices","offering_item_friendly_name":"Universal","measurement_unit":"quantity","resource_type":"data","configurable_option":{"friendly_name":"Universal","measurement_unit":"quantity","measurement_unit_name":"Devices"},"sort_priority":1}}',
+                ]],
+            ],
+            'customer has offering items with the same name' => [
+                [
+                    'tenant_kind' => 'customer',
+                    'applications.0.editions.0.status' => 'active',
+                    'applications.0.editions.1.status' => 'inactive',
+                    'applications.0.editions.2.status' => 'inactive',
+                    'applications.0.offering_items.0.name' => 'storage',
+                    'applications.0.offering_items.0.status' => 'active',
+                    'applications.0.offering_items.1.name' => 'storage',
+                    'applications.0.offering_items.1.status' => 'active',
+                ],
+                false,
+                ['applications' => [
+                    'Only one infrastructure component can be enabled for a tenant of the "Customer" type. Details: {"application":"backup","offering_item":{"name":"storage","measurement_unit":"quantity","quota_value":20,"status":"active"}}',
                 ]],
             ],
         ];

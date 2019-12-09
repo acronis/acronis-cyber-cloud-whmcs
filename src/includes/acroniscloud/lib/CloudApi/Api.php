@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\CloudApi;
@@ -13,6 +13,7 @@ use Acronis\Cloud\Client\Model\AccessPolicies\AccessPolicy;
 use Acronis\Cloud\Client\Model\Applications\Application;
 use Acronis\Cloud\Client\Model\Applications\RoleList;
 use Acronis\Cloud\Client\Model\Applications\RoleListItems;
+use Acronis\Cloud\Client\Model\Clients\Client;
 use Acronis\Cloud\Client\Model\Clients\ClientPost;
 use Acronis\Cloud\Client\Model\Clients\ClientPostResult;
 use Acronis\Cloud\Client\Model\Infra\Infra;
@@ -312,20 +313,6 @@ class Api extends AuthorizedApi
     /* ====== Users API ====== */
 
     /**
-     * @return User
-     * @throws ApiException
-     * @throws HttpException
-     */
-    public function getMe()
-    {
-        return $this->memoize(function () {
-            return $this->authorizedCall(function () {
-                return $this->getUsersApi()->getUsersMe();
-            });
-        });
-    }
-
-    /**
      * Returns True if the login exists otherwise False
      *
      * @param string $login
@@ -525,9 +512,11 @@ class Api extends AuthorizedApi
      */
     public function fetchTenants(array $uuids)
     {
-        return $this->authorizedCall(function () use ($uuids) {
-            return $this->getTenantsApi()->getTenants($uuids);
-        })->getItems();
+        return $this->batchRun(function ($uuids) {
+            return $this->authorizedCall(function () use ($uuids) {
+                return $this->getTenantsApi()->getTenants($uuids);
+            })->getItems();
+        }, $uuids);
     }
 
     /**
@@ -1183,9 +1172,11 @@ class Api extends AuthorizedApi
      */
     public function fetchLocations($uuids)
     {
-        return $this->authorizedCall(function () use ($uuids) {
-            return $this->getLocationsApi()->getLocations($uuids);
-        })->getItems();
+        return $this->batchRun(function ($uuids) {
+            return $this->authorizedCall(function () use ($uuids) {
+                return $this->getLocationsApi()->getLocations($uuids);
+            })->getItems();
+        }, $uuids);
     }
 
     /**
@@ -1224,9 +1215,11 @@ class Api extends AuthorizedApi
      */
     public function fetchInfras($uuids)
     {
-        return $this->authorizedCall(function () use ($uuids) {
-            return $this->getInfraApi()->getInfra($uuids);
-        })->getItems();
+        return $this->batchRun(function ($uuids) {
+            return $this->authorizedCall(function () use ($uuids) {
+                return $this->getInfraApi()->getInfra($uuids);
+            })->getItems();
+        }, $uuids);
     }
 
     /**
@@ -1365,6 +1358,24 @@ class Api extends AuthorizedApi
             }
 
             return $offeringItem->getStatus() === static::OFFERING_ITEM_STATUS_ACTIVE;
+        });
+    }
+
+    /**
+     * @return User|Client
+     * @throws ApiException
+     * @throws HttpException
+     */
+    private function getMe()
+    {
+        return $this->memoize(function () {
+            return $this->authorizedCall(function () {
+                if ($this->getGrantType() === static::GRANT_TYPE_CLIENT_CREDENTIALS) {
+                    return $this->getClientsApi()->getClientsByClientId($this->getLogin());
+                } else {
+                    return $this->getUsersApi()->getUsersMe();
+                }
+            });
         });
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Logger\Processor;
@@ -11,11 +11,12 @@ class PasswordProtectProcessor extends TokenProtectProcessor
 
     /** @var string[] */
     protected static $_sensitiveDataEnclosedIn = [
-        '/password"\s*:\s*"/ui' => '/(?<!\\\\)"/u', // password in json
+        '/password2?"\s*:\s*"/ui' => '/(?<!\\\\)"/u', // password in json
         '/password=/ui' => '/&|\s/u',               // password in URL param
         '/password%3D/ui' => '/%26|\s/u',           // password in URL param with encoded URL
         '/password\]\s*=\>\s*/ui' => '/\[|\s/u',    // password in print_r
-        '/password\\\\"\s*:\s*\\\\"/ui' => '/\\\\"\s*[},]/u', // password in logs
+        '/password2?\\\\"\s*:\s*\\\\"/ui' => '/\\\\"\s*[},]/u', // password in logs
+        '/client_secret\\\\"\s*:\s*\\\\"/ui' => '/\\\\"\s*[},]/u', // client secret auth in logs
     ];
 
     protected function protectSensitiveData($token)

@@ -1,10 +1,11 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Localization;
 
+use AcronisCloud\Util\WHMCS\Lang;
 use Symfony\Component\Translation\Translator;
 
 class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
@@ -24,30 +25,30 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Default locale' => [
-                'en_US',
+                'en',
                 ['Test message.' => 'Test message.',],
             ],
             'Message with numbers' => [
-                'de_DE',
+                'de',
                 ['Test message with numbers 123456.' => 'Testnachricht mit den Nummern 123456.',],
             ],
             'Upper case message' => [
-                'ja_JP',
+                'ja',
                 ['TEST MESSAGE ALL CAPS' => 'テストメッセージすべて大文字',],
             ],
             'Message without translation' => [
-                'es_ES',
+                'es',
                 ['Message without translation' => '',],
             ],
             'Two messages and translations' => [
-                'fr_FR',
+                'fr',
                 [
                     'First message' => 'First translation',
                     'Second message' => 'Second translation',
                 ],
             ],
             'Locale without translation file' => [
-                'not_existing_locale',
+                'notExistingLocale',
                 [
                     'Test message without translation' => 'Test message without translation',
                 ],
@@ -57,20 +58,18 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateInstance()
     {
-        $translatorFactory = new TranslatorFactory;
+        $translatorFactory = $this->getTranslatorFactory();
 
         $this->assertInstanceOf(Translator::class, $translatorFactory->createInstance());
     }
 
     public function testCheckDefaultLocale()
     {
-        global $_ADMINLANG;
-        unset($_ADMINLANG['locale']);
-        $translatorFactory = new TranslatorFactory;
+        $translatorFactory = $this->getTranslatorFactory();
 
         $locale = $translatorFactory->createInstance()->getLocale();
 
-        $this->assertEquals('en_US', $locale);
+        $this->assertEquals(Lang::LOCALE_EN_US, $locale);
     }
 
     /**
@@ -78,8 +77,7 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckInvalidLocale($locale, $isValid)
     {
-        $this->setAdminLocale($locale);
-        $translatorFactory = new TranslatorFactory;
+        $translatorFactory = $this->getTranslatorFactory($locale);
 
         if (!$isValid) {
             $this->expectException(\InvalidArgumentException::class);
@@ -92,8 +90,7 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckLocale($locale, $message)
     {
-        $this->setAdminLocale($locale);
-        $translatorFactory = new TranslatorFactory;
+        $translatorFactory = $this->getTranslatorFactory($locale);
 
         $result = $translatorFactory->createInstance();
 
@@ -105,8 +102,7 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckTranslationMessage($locale, $messages)
     {
-        $this->setAdminLocale($locale);
-        $translatorFactory = new TranslatorFactory;
+        $translatorFactory = $this->getTranslatorFactory($locale);
 
         foreach ($messages as $message => $translation) {
             $content[$message] = $translatorFactory->createInstance()->trans($message);
@@ -114,9 +110,19 @@ class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($messages, $content);
     }
 
-    private function setAdminLocale($locale)
+    /**
+     * @param string $locale
+     * @return \PHPUnit_Framework_MockObject_MockObject|TranslatorFactory
+     */
+    private function getTranslatorFactory($locale = Lang::LOCALE_EN_US)
     {
-        global $_ADMINLANG;
-        $_ADMINLANG['locale'] = $locale;
+        $translatorFactory = $this->getMockBuilder(TranslatorFactory::class)
+            ->setMethods(['getLocale'])
+            ->getMock();
+        $translatorFactory->expects($this->any())
+            ->method('getLocale')
+            ->will($this->returnValue($locale));
+
+        return $translatorFactory;
     }
 }

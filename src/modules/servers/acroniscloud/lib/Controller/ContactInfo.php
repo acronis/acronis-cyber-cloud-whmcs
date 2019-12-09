@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace WHMCS\Module\Server\AcronisCloud\Controller;
@@ -60,6 +60,7 @@ class ContactInfo extends AbstractController
                 Server::PARAMETER_SERVER_PORT => $server->getPort(),
                 Server::PARAMETER_SERVER_USERNAME => $server->getUsername(),
                 Server::PARAMETER_SERVER_PASSWORD => $server->getPassword(),
+                Server::PARAMETER_SERVER_ACCESSHASH => $server->getAccessHash(),
             ]);
 
             try {
@@ -94,14 +95,9 @@ class ContactInfo extends AbstractController
         $clientId = $parameters->getUserId();
         $productId = $parameters->getProductId();
         $serviceId = $parameters->getServiceId();
-
-        $this->getLogger()->notice(
-            'Update contact information for client {0} for product {1} / service {2} at server {3}.',
-            [$clientId, $productId, $serviceId]
-        );
-
         $customFields = $this->getCustomFields($productId, $serviceId);
         $tenantId = $customFields->getTenantId();
+
         if (!$tenantId) {
             $this->getLogger()->warning(
                 'Unable to update contact information for the tenant of client {0}. There is no value for custom property "{1}" for product {2} / service {3}.',
@@ -111,7 +107,13 @@ class ContactInfo extends AbstractController
             return;
         }
 
-        $cloudApi = $this->getCloudApiForServer($parameters->getServer());
+        $server = $parameters->getServer();
+        $this->getLogger()->notice(
+            'Update contact information for client {0} for product {1} / service {2} at server {3}.',
+            [$clientId, $productId, $serviceId, $server->getId()]
+        );
+
+        $cloudApi = $this->getCloudApiForServer($server);
         $tenant = $cloudApi->getTenant($tenantId);
 
         $tenantHelper = new TenantManager($parameters, $cloudApi);

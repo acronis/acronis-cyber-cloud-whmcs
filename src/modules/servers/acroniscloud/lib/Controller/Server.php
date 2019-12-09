@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace WHMCS\Module\Server\AcronisCloud\Controller;
@@ -19,6 +19,7 @@ use AcronisCloud\Service\Dispatcher\RequestInterface;
 use AcronisCloud\Service\Logger\LoggerAwareTrait;
 use AcronisCloud\Util\Arr;
 use AcronisCloud\Util\Str;
+use AcronisCloud\Util\WHMCS\Lang;
 use AcronisCloud\View\ViewLoader;
 use Exception;
 use WHMCS\Module\Server\AcronisCloud\Subscription\RequestParameters\Server as RequestParametersServer;
@@ -69,6 +70,7 @@ class Server extends AbstractController
             );
 
             $cloudApi = $this->getCloudApi();
+            $cloudApi->resetAccessCache();
             if ($cloudApi->getGrantType() !== AuthorizedApi::GRANT_TYPE_CLIENT_CREDENTIALS) {
                 $this->createClientCredentials();
             }
@@ -175,12 +177,11 @@ class Server extends AbstractController
                 'username' => $this->gettext('Username'),
                 'password' => $this->gettext('Password'),
                 'client_id' => $this->gettext('Client ID'),
-                'client_secret' => $this->gettext('Client Secret (recommended)'),
+                'client_secret' => $this->gettext('Client Secret'),
+                'client_id_method' => $this->gettext('Client ID (recommended)'),
                 'authentication' => $this->gettext('Authentication method'),
                 'hint' => $this->gettext('Username and password will be replaced with Client ID and Client Secret after you click "{0}"',
-                    [
-                        $GLOBALS['_LANG']['clientareasavechanges'] ? $GLOBALS['_LANG']['clientareasavechanges'] : 'Save Changes',
-                    ]
+                    [Lang::trans('global.savechanges')]
                 ),
             ];
 
@@ -207,9 +208,11 @@ class Server extends AbstractController
 
             if (empty($serverId)) {
                 $server = new RequestParametersServer([
+                    RequestParametersServer::PARAMETER_SERVER_ID => -1,
                     RequestParametersServer::PARAMETER_SERVER_HOSTNAME => $request->getBodyParameter('hostname'),
                     RequestParametersServer::PARAMETER_SERVER_USERNAME => $request->getBodyParameter('username'),
                     RequestParametersServer::PARAMETER_SERVER_PASSWORD => $request->getBodyParameter('password'),
+                    RequestParametersServer::PARAMETER_SERVER_ACCESSHASH => $request->getBodyParameter('accesshash'),
                 ]);
                 $this->setCloudServer($server);
             } elseif (!$this->initServer($serverId)) {
@@ -221,7 +224,7 @@ class Server extends AbstractController
             if (!$this->getCloudServer()->isSecure()) {
                 throw new \Exception('Cannot connect over insecure channel. Please, enable the SSL Mode for Connections bellow.');
             }
-            $this->getCloudApi()->getMe();
+            $this->getCloudApi()->getRootTenantId();
         } catch (Exception $e) {
             $this->getLogger()->error(
                 'Test server connection error: {0}, {1}',
@@ -252,7 +255,7 @@ class Server extends AbstractController
     {
         try {
             $cloudApi = $this->getCloudApi();
-            $tenantId = $cloudApi->getMe()->getTenantId();
+            $tenantId = $cloudApi->getRootTenantId();
             $clientPost = $this->createClientPost($tenantId);
             $client = $cloudApi->createClient($clientPost);
             $cloudApi->setClientCredentials($client->getClientId(), $client->getClientSecret());

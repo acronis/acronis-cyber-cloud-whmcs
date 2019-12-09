@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\ModuleMigration;
@@ -183,7 +183,7 @@ class Manager
             if ($cloudApi->getGrantType() !== AuthorizedApi::GRANT_TYPE_CLIENT_CREDENTIALS) {
                 $this->convertServerCredentials($server);
             }
-            $cloudApi->getMe();
+            $cloudApi->getRootTenantId();
 
             $server->type = ACRONIS_CLOUD_SERVICE_NAME;
 
@@ -218,7 +218,7 @@ class Manager
         try {
             $this->getLogger()->info('Converting credentials for server "{0}".', [$server->getName()]);
             $cloudApi = $this->createCloudApiInstance($server);
-            $tenantId = $cloudApi->getMe()->getTenantId();
+            $tenantId = $cloudApi->getRootTenantId();
             $clientPost = $this->createClientPost($tenantId);
             $client = $cloudApi->createClient($clientPost);
             $cloudApi->setClientCredentials($client->getClientId(), $client->getClientSecret());
@@ -509,8 +509,7 @@ class Manager
         $storageMeasurementUnit = $this->resolveStorageMeasurementUnit($product);
 
         $cloudApi = $this->getCloudApiForServer($server);
-        $cloudAdmin = $cloudApi->getMe();
-        $rootTenantId = $cloudAdmin->getTenantId();
+        $rootTenantId = $cloudApi->getRootTenantId();
 
         $metaInfo = $this->getMetaInfo();
         $offeringItems = [];

@@ -265,3 +265,6 @@ make
 Under the hood, a docker image is built based on Dockerfile in the root dir repository. This image contains all of the utilities and components necessary to build the module successfully.
 
 And finally, the image is used to start a container and to build the module as described in the build.sh file in the root folder of the repository.
+
+
+*© 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.*

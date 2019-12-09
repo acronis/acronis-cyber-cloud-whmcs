@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Repository\Validation\Template;
@@ -42,6 +42,7 @@ class TemplateApplicationRules extends AbstractTemplateRule
         );
         $this->offeringItemRules = new TemplateOfferingItemRules(
             $templateData[Template::RELATION_APPLICATIONS],
+            $templateData[Template::COLUMN_TENANT_KIND],
             $allowedOfferingItems,
             $allowedInfras
         );

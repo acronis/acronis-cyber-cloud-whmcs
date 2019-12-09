@@ -1,13 +1,12 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\Service\Cache;
 
 use AcronisCloud\Service\Locator;
 use AcronisCloud\Service\Logger\LoggerFactory;
-use AcronisCloud\Util\Func;
 use AcronisCloud\Util\Str;
 use Monolog\Logger;
 
@@ -32,9 +31,6 @@ trait CacheableTrait
      */
     protected function fromCache(callable $method, $ttl = null, $refreshTtl = false, $objectId = '', $force = false)
     {
-        $callerName = Func::getCallerName();
-        $objectId = $this->buildCacheableObjectKey($callerName, $objectId);
-
         try {
             if (!$force && $this->hasCacheableStoredObject($objectId)) {
                 return $this->getCacheableStoredObject($objectId, $ttl, $refreshTtl);
@@ -52,6 +48,14 @@ trait CacheableTrait
         $this->storeCacheableObject($objectId, $object, $ttl);
 
         return $object;
+    }
+
+    /**
+     * @param $objectId
+     */
+    protected function resetCache($objectId)
+    {
+        $this->getCacheInstance()->delete($objectId);
     }
 
     /**
@@ -75,7 +79,7 @@ trait CacheableTrait
         $result = $this->getCacheInstance()->get($objectId);
 
         if ($refreshTtl && $this->getCacheInstance()->has($objectId)) {
-            $this->getCacheInstance()->refresh($objectId, $ttl);
+            $this->getCacheInstance()->set($objectId, $result, $ttl);
         }
 
         return $result;
@@ -88,16 +92,6 @@ trait CacheableTrait
     private function hasCacheableStoredObject($objectId)
     {
         return $this->getCacheInstance()->has($objectId);
-    }
-
-    /**
-     * @param string $method
-     * @param string $objectId
-     * @return string
-     */
-    private function buildCacheableObjectKey($method, $objectId)
-    {
-        return implode('|', [$method, $objectId]);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace WHMCS\Module\Server\AcronisCloud\Controller;
@@ -45,9 +45,9 @@ class ClientAreaPage extends AbstractController
         $message = Str::format(
             '<div class="errorbox"><strong><span class="title">:headerText </span></strong><br/>:infoText<br/></div>:errorMessage',
             [
-                ':headerText' => $headerText,
-                ':errorMessage' => $e->getMessage(),
-                ':infoText' => $infoText,
+                ':headerText' => htmlspecialchars($headerText),
+                ':errorMessage' => htmlspecialchars($e->getMessage()),
+                ':infoText' => htmlspecialchars($infoText),
             ]
         );
 

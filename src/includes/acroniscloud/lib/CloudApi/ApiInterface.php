@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\CloudApi;
@@ -69,6 +69,11 @@ interface ApiInterface
      */
     public function getGrantType();
 
+    /**
+     * @return void
+     */
+    public function resetAccessCache();
+
     /* ====== Methods for the root tenant ====== */
 
     /**
@@ -105,11 +110,6 @@ interface ApiInterface
     public function isInfraAvailableForRootTenant($infraId);
 
     /* ====== Users API ====== */
-
-    /**
-     * @return User
-     */
-    public function getMe();
 
     /**
      * Returns True if the login exists otherwise False

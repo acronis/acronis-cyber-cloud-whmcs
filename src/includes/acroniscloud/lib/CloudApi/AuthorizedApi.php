@@ -1,6 +1,6 @@
 <?php
 /**
- * @Copyright © 2002-2019 Acronis International GmbH. All rights reserved
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
 namespace AcronisCloud\CloudApi;
@@ -22,6 +22,9 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
     const URL_PATH_API_V2 = '/api/2';
 
     const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
+
+    const CACHE_SCOPE_ACCESS_TOKEN = 'access_token';
+    const CACHE_SCOPE_SERVER_URL = 'server_url';
 
     /** @var string */
     private $url;
@@ -68,6 +71,22 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
     }
 
     /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGrantType()
+    {
+        return $this->grantType;
+    }
+
+    /**
      * @param $clientId
      * @param $clientSecret
      * @throws HttpException
@@ -84,6 +103,15 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
     }
 
     /**
+     * @return void
+     */
+    public function resetAccessCache()
+    {
+        $this->resetCache($this->getCredentialsHash(static::CACHE_SCOPE_ACCESS_TOKEN));
+        $this->resetCache($this->getCredentialsHash(static::CACHE_SCOPE_SERVER_URL));
+    }
+
+    /**
      * @param $login
      */
     protected function setLogin($login)
@@ -92,27 +120,11 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
     }
 
     /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * @param $password
      */
     protected function setPassword($password)
     {
         $this->password = $password;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGrantType()
-    {
-        return $this->grantType;
     }
 
     /**
@@ -223,7 +235,7 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
             }
 
             return LocalApi::encryptPassword($idpToken->getAccessToken());
-        }, $this->getAccessTokenTtl(), true, $this->getCredentialsHash(), $force));
+        }, $this->getAccessTokenTtl(), true, $this->getCredentialsHash(static::CACHE_SCOPE_ACCESS_TOKEN), $force));
     }
 
     protected function resetAccessToken()
@@ -236,9 +248,9 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
         return $this->getConfig()->getCloudApiSettings()->getAccessTokenTtl();
     }
 
-    protected function getCredentialsHash()
+    protected function getCredentialsHash($scope)
     {
-        return md5($this->getUrl() . $this->getLogin() . $this->getPassword());
+        return $scope . '_' . hash('sha256', $this->getUrl() . $this->getLogin());
     }
 
     /**
@@ -337,7 +349,7 @@ abstract class AuthorizedApi extends ApiAccessor implements ApiInterface
             $accountInfo = $this->fetchAccountInfo($this->login);
 
             return rtrim($accountInfo->server_url, '/');
-        }, $this->getAccessTokenTtl(), false, $this->getCredentialsHash());
+        }, $this->getAccessTokenTtl(), false, $this->getCredentialsHash(static::CACHE_SCOPE_SERVER_URL));
     }
 
     /**

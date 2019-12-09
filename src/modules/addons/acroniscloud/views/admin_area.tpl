@@ -1,3 +1,6 @@
+{**
+ * @Copyright © 2003-2019 Acronis International GmbH. This source code is distributed under MIT software license.
+ *}
 <div class="contexthelp" style="margin-top: -42px;">
     <a href="https://marketplace.whmcs.com/product/1246" target="_blank">
         <img src="images/icons/help.png" border="0" align="absmiddle">
@@ -6,7 +9,7 @@
 </div>
 
 <noscript>
-    <strong>{{$noScriptInfo}}</strong>
+    <strong>{{$noScriptInfo|escape}}</strong>
 </noscript>
 
 <script>
