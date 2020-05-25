@@ -8,18 +8,33 @@ use AcronisCloud\Localization\L10n;
 return [
     [
         'edition_name' => 'standard',
-        'title' => L10n::gettext('Standard Edition'),
-        'description' => L10n::gettext('Provides backup and recovery functionality that covers small environment needs.'),
+        'title' => L10n::gettext('Cyber Backup - Standard Edition'),
+        'description' => L10n::gettext('Provides basic backup and recovery, along with basic cyber protection functionality. It is mainly designed for small environments.'),
     ],
     [
         'edition_name' => 'advanced',
-        'title' => L10n::gettext('Advanced Edition'),
-        'description' => L10n::gettext('Provides backup and recovery functionality designed for big environments. It is dedicated to protect advanced workloads such as Microsoft Exchange and Microsoft SQL cluster, and provides group management and plan management.'),
+        'title' => L10n::gettext('Cyber Backup - Advanced Edition'),
+        'description' => L10n::gettext('Provides advanced backup and recovery, along with basic cyber protection functionality. It is mainly designed for big environments.'),
     ],
     [
         'edition_name' => 'disaster_recovery',
-        'title' => L10n::gettext('Disaster Recovery Edition'),
-        'description' => L10n::gettext('Provides the disaster recovery functionality along with the advanced backup and recovery functionality. It is designed for companies that have high requirements for the Recovery Time Objective and needs in advanced backup and recovery functionality.'),
+        'title' => L10n::gettext('Cyber Backup - Disaster Recovery Edition'),
+        'description' => L10n::gettext('Provides advanced backup and recovery, disaster recovery, along with basic cyber protection functionality. It is mainly designed for big environments and companies that have high requirements for the Recovery Time Objective.'),
+    ],
+    [
+        'edition_name' => 'cyber_protect_std',
+        'title' => L10n::gettext('Cyber Protect - Standard Edition'),
+        'description' => L10n::gettext('Provides basic backup and recovery, along with advanced cyber protection functionality. It is mainly designed for small environments.'),
+    ],
+    [
+        'edition_name' => 'cyber_protect_adv',
+        'title' => L10n::gettext('Cyber Protect - Advanced Edition'),
+        'description' => L10n::gettext('Provides advanced backup and recovery, along with advanced cyber protection functionality. It is mainly designed for big environments.'),
+    ],
+    [
+        'edition_name' => 'cyber_protect_dre',
+        'title' => L10n::gettext('Cyber Protect - Disaster Recovery Edition'),
+        'description' => L10n::gettext('Provides advanced backup and recovery, disaster recovery, along with advanced cyber protection functionality. It is mainly designed for big environments and companies that have high requirements for the Recovery Time Objective.'),
     ],
     [
         'edition_name' => 'mixed',

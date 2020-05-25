@@ -14,7 +14,6 @@ class Product extends AbstractModel
 {
     const TABLE = 'tblproducts';
 
-    const COLUMN_ID = 'id';
     const COLUMN_NAME = 'name';
     const COLUMN_DESCRIPTION = 'description';
     const COLUMN_SERVER_TYPE = 'servertype';
@@ -32,14 +31,6 @@ class Product extends AbstractModel
         $templateIdCol = ProductOptions::getConfigOptionName(ProductOptions::INDEX_TEMPLATE_ID);
 
         return $this->hasOne(Template::class, Template::COLUMN_ID, $templateIdCol);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->getAttributeValue(static::COLUMN_ID);
     }
 
     /**

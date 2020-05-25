@@ -102,7 +102,7 @@ class AddonSettings extends AbstractController
             Capsule::schema()->create(TemplateApplication::TABLE, function ($table) {
                 $table->increments(TemplateApplication::COLUMN_ID);
                 $table->string(TemplateApplication::COLUMN_TYPE);
-                $table->string(TemplateApplication::COLUMN_EDITIONS);
+                $table->string(TemplateApplication::COLUMN_EDITIONS, TemplateApplication::COLUMN_EDITIONS_SIZE);
                 $table->enum(TemplateApplication::COLUMN_STATUS, ['active', 'inactive']);
                 $table->unsignedInteger(TemplateApplication::COLUMN_TEMPLATE_ID);
                 $table->unique([TemplateApplication::COLUMN_TEMPLATE_ID, TemplateApplication::COLUMN_TYPE],
@@ -180,6 +180,36 @@ class AddonSettings extends AbstractController
             'status' => DataResponse::SUCCESS,
             'description' => $this->gettext('{0} addon activated successfully.', [ACRONIS_CLOUD_FRIENDLY_NAME]),
         ];
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function upgrade($request)
+    {
+        $version = $request->getParameters()['version'];
+
+        if (version_compare($version, '2.0.0-130', '<')) {
+            $logger = $this->getLogger();
+            $pdo = Capsule::connection()->getPdo();
+            $pdo->beginTransaction();
+            try {
+                $query = strtr('ALTER TABLE {table} MODIFY {column} varchar({size}) NOT NULL;', [
+                    '{table}' => TemplateApplication::TABLE,
+                    '{column}' => TemplateApplication::COLUMN_EDITIONS,
+                    '{size}' => TemplateApplication::COLUMN_EDITIONS_SIZE,
+                ]);
+                $pdo->exec($query);
+                $pdo->commit();
+                $logger->info('Table "{0}" migrated.', [TemplateApplication::TABLE]);
+            } catch (\Exception $e) {
+                $pdo->rollBack();
+                $logger = $this->getLogger();
+                $logger->error($e->getMessage());
+                $logger->debug($e->getTraceAsString());
+            }
+        }
     }
 
     /**

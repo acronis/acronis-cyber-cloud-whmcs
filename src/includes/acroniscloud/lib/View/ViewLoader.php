@@ -131,8 +131,6 @@ class ViewLoader
      */
     protected function buildAssetsPath()
     {
-        $whmcsRelativePath  = str_replace($_SERVER['DOCUMENT_ROOT'], '', ACRONIS_CLOUD_WHMCS_DIR);
-        $assetsDirPath = str_replace(ACRONIS_CLOUD_WHMCS_DIR, '', $this->assetsLocalDir);
-        $this->assetsPath = $whmcsRelativePath ? implode(DIRECTORY_SEPARATOR, [$whmcsRelativePath, $assetsDirPath]) : $assetsDirPath;
+        $this->assetsPath = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', realpath($this->assetsLocalDir));
     }
 }

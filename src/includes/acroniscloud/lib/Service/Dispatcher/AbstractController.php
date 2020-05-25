@@ -47,7 +47,7 @@ abstract class AbstractController implements ControllerInterface
                 : $url . '?' . $params;
         }
         ob_clean();
-        header('location: ' . $url);
+        header('Location: ' . $url, true, 303);
         die();
     }
 }

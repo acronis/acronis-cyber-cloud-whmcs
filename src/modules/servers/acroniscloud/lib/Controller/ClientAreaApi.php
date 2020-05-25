@@ -215,6 +215,10 @@ class ClientAreaApi extends TemplateHandler
         // make sure the client didn't access another service
         $service = $this->getClientService();
         $product = $service->product;
+        $currencyId = $this->getClient()->currency;
+        $currency = $this->getRepository()
+            ->getCurrencyRepository()
+            ->getCurrency($currencyId);
 
         return [
             'name' => $product ? $product->getName() : '',
@@ -223,6 +227,7 @@ class ClientAreaApi extends TemplateHandler
             'due_date' => $service->getNextDueDate(),
             'billing_cycle' => $service->getBillingCycle(),
             'billing_amount' => $service->getAmount(),
+            'billing_currency' => $currency->getCode(),
             'payment_method' => $service->getPaymentMethodName(),
         ];
     }

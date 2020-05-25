@@ -9,7 +9,6 @@ class TemplateOfferingItem extends AbstractModel implements StatusInterface
 {
     const TABLE = 'acroniscloud_service_template_offering_items';
 
-    const COLUMN_ID = 'id';
     const COLUMN_NAME = 'name';
     const COLUMN_STATUS = 'status';
     const COLUMN_QUOTA_VALUE = 'quota_value';
@@ -45,12 +44,13 @@ class TemplateOfferingItem extends AbstractModel implements StatusInterface
     ];
 
     /**
-     * @return int
+     * Enforce quota value to be casted as integer in response
+     *
+     * @var array
      */
-    public function getId()
-    {
-        return $this->getAttributeValue(static::COLUMN_ID);
-    }
+    protected $casts = [
+        self::COLUMN_QUOTA_VALUE => self::TYPE_INTEGER,
+    ];
 
     /**
      * @return string

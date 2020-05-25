@@ -11,6 +11,7 @@ use AcronisCloud\Model\TemplateApplication;
 use AcronisCloud\Model\TemplateOfferingItem;
 use AcronisCloud\Service\MetaInfo\MetaInfoAwareTrait;
 use AcronisCloud\Util\Str;
+use WHMCS\Database\Capsule;
 
 class TemplateRepository extends AbstractRepository
 {
@@ -43,40 +44,45 @@ class TemplateRepository extends AbstractRepository
      */
     public function update(array $data, $id)
     {
-        /** @var Template $model*/
-        $model = $this->find($id);
-        if (!$model) {
-            throw new \Exception(Str::format(
-                'Cannot update template: No model was found with Id "%s"',
-                $id
-            ));
-        }
-        $applications = $this->extractApplications($data);
-
-        $appIdColumn = TemplateApplication::COLUMN_ID;
-        $templateInfoUpdate = [
-            Template::COLUMN_NAME => $data[Template::COLUMN_NAME],
-            Template::COLUMN_DESCRIPTION => $data[Template::COLUMN_DESCRIPTION],
-        ];
-        if (!$model->server()) {
-            $templateInfoUpdate[Template::COLUMN_SERVER_ID] = $data[Template::COLUMN_SERVER_ID];
-        }
-        $model->update($templateInfoUpdate);
-
-        $model->applications()->whereNotIn($appIdColumn, array_column($applications, $appIdColumn))->delete();
-        foreach ($applications as $application) {
-            /** @var TemplateApplication $appModel */
-            $appModel = $model->applications()->updateOrCreate([$appIdColumn => $application[$appIdColumn]], $application);
-            $offeringItemsProp = static::REQUEST_MAPPINGS[TemplateApplication::RELATION_OFFERING_ITEMS];
-            $offeringItems = $application[$offeringItemsProp];
-            $oiIdColumn = TemplateOfferingItem::COLUMN_ID;
-            $appModel->offeringItems()->delete();
-            foreach ($offeringItems  as $offeringItem) {
-                $appModel->offeringItems()->updateOrCreate([$oiIdColumn => $offeringItem[$oiIdColumn]], $offeringItem);
+        return Capsule::transaction(function () use ($data, $id) {
+            /** @var Template $model */
+            $model = $this->find($id);
+            if (!$model) {
+                throw new \Exception(Str::format(
+                    'Cannot update template: No model was found with Id "%s"',
+                    $id
+                ));
             }
-        }
+            $applications = $this->extractApplications($data);
 
-        return $model->toArray();
+            $appIdColumn = TemplateApplication::COLUMN_ID;
+            $templateInfoUpdate = [
+                Template::COLUMN_NAME => $data[Template::COLUMN_NAME],
+                Template::COLUMN_DESCRIPTION => $data[Template::COLUMN_DESCRIPTION],
+            ];
+            if (!$model->server()) {
+                $templateInfoUpdate[Template::COLUMN_SERVER_ID] = $data[Template::COLUMN_SERVER_ID];
+            }
+            $model->update($templateInfoUpdate);
+
+            $model->applications()->whereNotIn($appIdColumn, array_column($applications, $appIdColumn))->delete();
+            foreach ($applications as $application) {
+                /** @var TemplateApplication $appModel */
+                $appModel = $model->applications()->updateOrCreate([$appIdColumn => $application[$appIdColumn]], $application);
+                if ($appModel->wasRecentlyCreated) {
+                    $this->enforceInsertId($appModel);
+                }
+                $offeringItemsProp = static::REQUEST_MAPPINGS[TemplateApplication::RELATION_OFFERING_ITEMS];
+                $offeringItems = $application[$offeringItemsProp];
+                $oiIdColumn = TemplateOfferingItem::COLUMN_ID;
+                $appModel->offeringItems()->delete();
+                foreach ($offeringItems as $offeringItem) {
+                    $appModel->offeringItems()->updateOrCreate([$oiIdColumn => $offeringItem[$oiIdColumn]], $offeringItem);
+                }
+            }
+
+            return $model->toArray();
+        });
     }
 
     /**
@@ -84,33 +90,38 @@ class TemplateRepository extends AbstractRepository
      */
     public function create(array $data)
     {
-        $template = new Template();
-        if (isset($data[$template->getKeyName()])) {
-            throw new \Exception(Str::format(
-                'Cannot create template with set "%s". Maybe you wanted to update instead?',
-                $template->getKeyName()
-            ));
-        }
+        return Capsule::transaction(function () use ($data) {
+            $template = new Template();
+            if (isset($data[$template->getKeyName()])) {
+                throw new \Exception(Str::format(
+                    'Cannot create template with set "%s". Maybe you wanted to update instead?',
+                    $template->getKeyName()
+                ));
+            }
 
-        $template->fill($data);
-        if ($template->getTenantKind() === ApiInterface::TENANT_KIND_PARTNER) {
-            // A partner is always an admin
-            $template->setUserRole(Template::USER_ROLE_ADMIN);
-        }
-        $template->save();
+            $template->fill($data);
+            if ($template->getTenantKind() === ApiInterface::TENANT_KIND_PARTNER) {
+                // A partner is always an admin
+                $template->setUserRole(Template::USER_ROLE_ADMIN);
+            }
+            $template->save();
+            $this->enforceInsertId($template);
 
-        $applications = $this->extractApplications($data);
-        $applicationModels = $template->applications()->createMany($applications);
+            $applications = $this->extractApplications($data);
+            $template->applications()->createMany($applications);
+            // eager load because of insert index pollution
+            $applicationModels = $template->applications()->getEager();
 
-        /** @var $appModel TemplateApplication */
-        foreach ($applicationModels as $appModel) {
-            $application = $applications[$appModel->type];
-            $offeringItemsProp = static::REQUEST_MAPPINGS[TemplateApplication::RELATION_OFFERING_ITEMS];
-            $oiData = $application[$offeringItemsProp];
-            $appModel->offeringItems()->createMany($oiData);
-        }
+            /** @var $appModel TemplateApplication */
+            foreach ($applicationModels as $appModel) {
+                $application = $applications[$appModel->type];
+                $offeringItemsProp = static::REQUEST_MAPPINGS[TemplateApplication::RELATION_OFFERING_ITEMS];
+                $oiData = $application[$offeringItemsProp];
+                $appModel->offeringItems()->createMany($oiData);
+            }
 
-        return $template->id;
+            return $template->getId();
+        });
     }
 
     /**
@@ -118,7 +129,7 @@ class TemplateRepository extends AbstractRepository
      */
     public function delete($id)
     {
-        /** @var Template $model*/
+        /** @var Template $model */
         $model = Template::findOrFail($id);
 
         return $model->delete();

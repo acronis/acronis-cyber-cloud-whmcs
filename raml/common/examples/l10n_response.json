@@ -64,6 +64,7 @@
     "public_ips": "Public IP addresses",
     "dr_cloud_servers": "Cloud servers",
     "dr_internet_access": "Internet access",
+    "vpn_concurrent_connections": "VPN concurrent connections",
 
     "adv_universal_devices": "Universal",
     "adv_workstations": "Workstations",
@@ -84,6 +85,7 @@
     "adv_websites": "Websites",
     "adv_storage": "Backup storage",
     "adv_child_storages": "Partner-owned backup storage",
+    "adv_vpn_concurrent_connections": "VPN concurrent connections",
 
     "dre_universal_devices": "Universal",
     "dre_workstations": "Workstations",
@@ -110,6 +112,7 @@
     "dre_public_ips": "Public IP addresses",
     "dre_dr_cloud_servers": "Cloud servers",
     "dre_dr_internet_access": "Internet access",
+    "dre_vpn_concurrent_connections": "VPN concurrent connections",
 
     "local_storage": "Local backup",
 

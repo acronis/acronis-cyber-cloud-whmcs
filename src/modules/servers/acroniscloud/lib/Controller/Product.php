@@ -41,6 +41,10 @@ class Product extends AbstractController
     public function beforeUpgrade($request)
     {
         $newProductId = Arr::get($request->getParameters(), static::REQUEST_PARAMETER_NEW_PRODUCT_ID);
+        $product = $this->getRepository()->getProductRepository()->find($newProductId);
+        if (!$product) {
+            return;
+        }
         $customFields = new CustomFields($newProductId, null);
         $customFields->createField(CustomFields::FIELD_NAME_TENANT_ID);
         $customFields->createField(CustomFields::FIELD_NAME_USER_ID);

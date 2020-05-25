@@ -9,6 +9,7 @@ use AcronisCloud\Repository\TemplateRepository;
 use AcronisCloud\Repository\WHMCS\AcronisServerRepository;
 use AcronisCloud\Repository\WHMCS\AddonModuleRepository;
 use AcronisCloud\Repository\WHMCS\ConfigurationRepository;
+use AcronisCloud\Repository\WHMCS\CurrencyRepository;
 use AcronisCloud\Repository\WHMCS\CustomFieldsRepository;
 use AcronisCloud\Repository\WHMCS\CustomFieldsValuesRepository;
 use AcronisCloud\Repository\WHMCS\ProductConfigGroupRepository;
@@ -74,6 +75,14 @@ class RepositoryFactory implements FactoryInterface
     public function getConfigurationRepository()
     {
         return new ConfigurationRepository();
+    }
+
+    /**
+     * @return CurrencyRepository
+     */
+    public function getCurrencyRepository()
+    {
+        return new CurrencyRepository();
     }
 
     /**

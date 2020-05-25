@@ -39,10 +39,13 @@ class ProductConfigGroupRepository extends AbstractRepository
      */
     private function createGroup($name, $description = '')
     {
-        return ProductConfigGroup::create([
+        $productGroup = ProductConfigGroup::create([
             ProductConfigGroup::COLUMN_NAME => $name,
             ProductConfigGroup::COLUMN_DESCRIPTION => $description,
         ]);
+        $this->enforceInsertId($productGroup);
+
+        return $productGroup;
     }
 
     /**
@@ -55,7 +58,7 @@ class ProductConfigGroupRepository extends AbstractRepository
         // reset array indexes to not mix up sub-options
         $options = array_values($options);
 
-        $optionsModels = $group->options()->createMany(array_map(
+        $group->options()->createMany(array_map(
             function ($option) {
                 return [
                     ProductConfigOption::COLUMN_OPTION_NAME =>
@@ -75,6 +78,8 @@ class ProductConfigGroupRepository extends AbstractRepository
             $options
         ));
 
+        // eager load because of insert index pollution
+        $optionsModels = $group->options()->getEager()->all();
         foreach ($optionsModels as $index => $optionModel) {
             $subOptions = Arr::get($options[$index], ProductConfigOption::RELATION_SUB_OPTIONS);
             if (empty($subOptions)) {

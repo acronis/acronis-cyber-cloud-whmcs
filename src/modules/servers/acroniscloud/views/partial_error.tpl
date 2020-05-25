@@ -22,7 +22,7 @@
     var content = document.getElementById('acronis-cloud-error');
 
     if (content) {
-      var previousElementSelector = {var_export($isAdmin)} ? '.contentarea h2' : '#order-standard_cart .header-lined, #order-boxes .header-lined';
+      var previousElementSelector = {var_export($isAdmin)} ? '.contentarea h2, #content h2' : '#order-standard_cart .header-lined, #order-boxes .header-lined';
       var previousElement = document.querySelector(previousElementSelector);
       if (previousElement && previousElement.parentNode) {
         previousElement.parentNode.insertBefore(content, previousElement.nextSibling);

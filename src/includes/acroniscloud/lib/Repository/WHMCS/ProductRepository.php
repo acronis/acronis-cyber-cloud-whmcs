@@ -17,6 +17,7 @@ class ProductRepository extends AbstractRepository
      */
     public function find($id)
     {
-        return Product::find($id);
+        return Product::where(Product::COLUMN_SERVER_TYPE, ACRONIS_CLOUD_SERVICE_NAME)
+            ->find($id);
     }
 }

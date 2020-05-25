@@ -240,6 +240,11 @@ class Subscription extends AbstractController
     {
         $this->setRequest($request);
 
+        if (!$this->getService()) {
+            // the service+user id is wrong or the product isn't from Acronis, so no tenant deletion will be done
+            return DataResponse::SUCCESS;
+        }
+
         $customFields = $this->getCustomFields();
         $tenantId = $customFields->getTenantId();
         if (!$tenantId) {

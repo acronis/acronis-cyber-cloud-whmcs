@@ -19,7 +19,7 @@
     function addHintAfter(selector, isSmall) {
       var hintElement = isSmall ? document.createElement('small') : document.createElement('div');
       hintElement.setAttribute('class', 'acronisAuthHint');
-      hintElement.innerText = '{$labels['hint']|escape}';
+      hintElement.innerHTML = '{$labels['hint']|escape}';
       var inputCell = document.querySelector(selector);
       inputCell.parentElement.appendChild(hintElement);
     }
@@ -147,6 +147,93 @@
       }
     }
 
+    // hostname
+    {literal}
+    function urlToHostname(input) {
+      if (!input) {
+        return input;
+      }
+      // https://stackoverflow.com/a/5717133
+      var pattern = new RegExp(
+        '^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$', // fragment locator
+        'i'
+      );
+      var result = pattern.exec(input);
+      if (result[1]) {
+        document.querySelector("#inputSecure").checked = result[1] === "https://";
+      }
+      return result[2];
+    }
+    {/literal}
+    var inputs = [];
+    function initUrlInputs() {
+      function add(input, label) {
+        var urlInput = input.cloneNode();
+        urlInput.removeAttribute('id')
+        urlInput.removeAttribute('name')
+        urlInput.classList.add('hidden');
+        input.parentNode.appendChild(urlInput);
+
+        input.addEventListener('input', event => {
+          var value = event.target.value;
+          inputs.forEach(input => {
+            if (input.origin !== event.target) {
+              input.origin.value = value;
+            }
+            input.url.value = value;
+          });
+        });
+        urlInput.addEventListener('input', event => {
+          var value = event.target.value;
+          var hostname = urlToHostname(value);
+          inputs.forEach(input => {
+            input.origin.value = hostname;
+            if (input.url !== event.target) {
+              input.url.value = value;
+            }
+          });
+        });
+
+        inputs.push({
+          origin: input,
+          url: urlInput,
+          label: label,
+          labelHTML: label.innerHTML,
+        });
+      }
+
+      var newInput = document.querySelector('#addHostname');
+      if (newInput) {
+        add(newInput, newInput.labels[0]);
+      }
+
+      var oldInput = document.querySelector('#inputHostname');
+      if (oldInput) {
+        add(oldInput, oldInput.parentNode.parentNode.children[0]);
+      }
+    }
+    function showUrlInputs() {
+      inputs.forEach(input => {
+        input.label.innerText = '{$labels['url_hostname']|escape}';
+        input.origin.classList.add('hidden');
+        input.url.classList.remove('hidden');
+
+        input.origin.value = urlToHostname(input.origin.value);
+     });
+    }
+    function hideUrlInputs() {
+      inputs.forEach(input => {
+        input.label.innerHTML = input.labelHTML;
+        input.origin.classList.remove('hidden');
+        input.url.classList.add('hidden');
+      });
+    }
+
     function checkServerType(selection) {
       var isEvent = !!selection.target;
       var selectedValue = isEvent ? selection.target.value : selection;
@@ -156,16 +243,19 @@
         authType = authType || 'username';
         createAuthTypeFields();
         setClientFields(authType);
+        showUrlInputs();
       } else if (isEvent) {
         var selectAuthTypes = document.getElementsByClassName('inputAuthType');
         [].forEach.call(selectAuthTypes, function (at) { at.classList.add('hidden'); });
         authType && setClientFields('reset');
         authType = '';
+        hideUrlInputs();
       }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       authType = document.getElementById('serverHash').value;
+      initUrlInputs();
       var serverTypeSelects = document.querySelectorAll('#addType, #inputServerType');
       // workaround for IE11
       [].forEach.call(serverTypeSelects, function (ts) {

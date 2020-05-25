@@ -12,9 +12,9 @@ class TemplateApplication extends AbstractModel implements StatusInterface
 {
     const TABLE = 'acroniscloud_service_template_applications';
 
-    const COLUMN_ID = 'id';
     const COLUMN_TYPE = 'type';
     const COLUMN_EDITIONS = 'editions';
+    const COLUMN_EDITIONS_SIZE = 1024;
     const COLUMN_STATUS = 'status';
     const COLUMN_TEMPLATE_ID = 'template_id';
 
@@ -73,7 +73,7 @@ class TemplateApplication extends AbstractModel implements StatusInterface
      * @var array
      */
     protected $casts = [
-        self::COLUMN_EDITIONS => 'array',
+        self::COLUMN_EDITIONS => self::TYPE_ARRAY,
     ];
 
     /**
@@ -84,14 +84,6 @@ class TemplateApplication extends AbstractModel implements StatusInterface
     public function offeringItems()
     {
         return $this->hasMany(TemplateOfferingItem::class);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->getAttributeValue(static::COLUMN_ID);
     }
 
     /**

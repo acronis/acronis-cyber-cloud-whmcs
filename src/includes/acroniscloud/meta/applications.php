@@ -12,8 +12,8 @@ return [
     ],
     [
         'type' => 'backup',
-        'title' => L10n::gettext('Backup & Disaster Recovery'),
-        'description' => L10n::gettext('Enables backup and recovery of physical and virtual machines, files, databases, and other data to local or cloud storage.'),
+        'title' => L10n::gettext('Cyber Protection'),
+        'description' => L10n::gettext('All-in-one cyber protection solution that integrates data protection, malware prevention, security controls, remote assistance, monitoring, and reporting.'),
         'tenant_kinds' => [
             'partner',
             'customer'
@@ -30,8 +30,8 @@ return [
     ],
     [
         'type' => 'hci',
-        'title' => L10n::gettext('Cyber Infrastructure SPLA'),
-        'description' => L10n::gettext('Enables service providers to use a Service Provider License Agreement (SPLA) for Acronis Cyber Infrastructure, instead of a license key.'),
+        'title' => L10n::gettext('Cyber Infrastructure'),
+        'description' => L10n::gettext('Enables service providers to use a Service Provider License Agreement (SPLA) for Acronis Software-Defined Infrastructure, instead of a license key.'),
         'tenant_kinds' => [
             'partner',
         ],

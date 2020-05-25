@@ -11,7 +11,6 @@ class ProductConfigGroup extends AbstractModel
 {
     const TABLE = 'tblproductconfiggroups';
 
-    const COLUMN_ID = 'id';
     const COLUMN_NAME = 'name';
     const COLUMN_DESCRIPTION = 'description';
 

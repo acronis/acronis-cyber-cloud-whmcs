@@ -5,12 +5,14 @@
 
 namespace AcronisCloud\Service\Logger\Whmcs;
 
+use AcronisCloud\Repository\AbstractRepository;
 use AcronisCloud\Service\Dispatcher\DispatcherFactory;
 use AcronisCloud\Service\Dispatcher\Request;
 use AcronisCloud\Service\Locator;
 use AcronisCloud\Service\Logger\DatabaseLogging;
 use AcronisCloud\Util\Arr;
 use Monolog\Handler\AbstractProcessingHandler;
+use WHMCS\Database\Capsule;
 
 class ModuleLogHandler extends AbstractProcessingHandler
 {
@@ -38,6 +40,8 @@ class ModuleLogHandler extends AbstractProcessingHandler
         ]);
 
         DatabaseLogging::runWithoutLogs(function () use ($action, $entry) {
+            // required to prevent insert index pollution (for more info, read comment above setLastInsertId() implementation)
+            AbstractRepository::setLastInsertId(Capsule::connection()->getPdo()->lastInsertId());
             logModuleCall(
                 ACRONIS_CLOUD_SERVICE_NAME,
                 $action,

@@ -336,19 +336,24 @@ class ServiceTemplate extends TemplateHandler
     {
         return $this->memoize(function () use ($tenantId, $applicationId) {
             $offeringItems = $this->getCloudApi()->getTenantApplicationOfferingItems($tenantId, $applicationId);
-
-            return array_keys(array_reduce(
-                $offeringItems,
-                function ($editions, OfferingItemOutput $oi) {
-                    $oiMeta = $this->getMetaInfo()->getOfferingItemMeta($oi->getName());
-                    if ($oiMeta && $oiMeta->getEditionName()) {
-                        $editions[$oiMeta->getEditionName()] = true;
-                    }
-
-                    return $editions;
-                },
-                []
-            ));
+            $editions = [];
+            foreach($offeringItems as $oi) {
+                $oiMeta = $this->getMetaInfo()->getOfferingItemMeta($oi->getName());
+                if (!$oiMeta) {
+                    continue;
+                }
+                $editionName = $oiMeta->getEditionName();
+                if (!$editionName) {
+                    continue;
+                }
+                $editionMeta = $this->getMetaInfo()->getEditionMeta($editionName);
+                if (!$editionMeta) {
+                    continue;
+                }
+                $editions[$editionMeta->getSortPriority()] = $editionName;
+            }
+            ksort($editions);
+            return array_values($editions);
         }, implode(':', [$tenantId, $applicationId]));
     }
 

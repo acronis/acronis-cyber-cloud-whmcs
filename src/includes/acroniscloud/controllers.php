@@ -25,6 +25,7 @@ return new ModuleRouter([
         'config' => [AddonSettings::class, 'getConfig'],
         'activate' => [AddonSettings::class, 'activate'],
         'deactivate' => [AddonSettings::class, 'deactivate'],
+        'upgrade' => [AddonSettings::class, 'upgrade'],
         'output' => new QueryParameterRouter([
             'index' => [AddonPage::class, 'index', Request::GET],
             'create_template' => [ServiceTemplate::class, 'create', Request::POST],
@@ -55,7 +56,7 @@ return new ModuleRouter([
         'ServiceSingleSignOn' => [ClientAreaApi::class, 'singleSignOn'],
         'TestConnection' => [Server::class, 'testConnection'],
         'ClientArea' => new QueryParameterRouter([
-            'index' => [ClientAreaPage::class, 'index', Request::GET],
+            'index' => [ClientAreaPage::class, 'index'],
             'get_details' => [ClientAreaApi::class, 'getDetails', Request::GET],
             'update_details' => [ClientAreaApi::class, 'updateDetails', Request::POST],
             'get_subscription' => [ClientAreaApi::class, 'getSubscription', Request::GET],

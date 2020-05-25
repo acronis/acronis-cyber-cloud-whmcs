@@ -1,0 +1,32 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-servers",
+  "name": "acroniscloud",
+  "license": "proprietary",
+  "category": "provisioning",
+  "description": {
+    "name": "Acronis Cyber Cloud",
+    "tagline": "AI-Powered Integration of Data Protection and Cybersecurity.",
+    "long": "With one SaaS solution, you and your customers gain access to hybrid cloud backup, endpoint protection, disaster recovery, AI-based malware protection, file sync and share, and blockchain-based file notarization and e-signature services, all managed from a single console. These in-demand, add-on services help you sell more and increase customer retention.",
+    "features": [
+      "Acronis Cyber Protect Cloud - This comprehensive solution combines data protection and cybersecurity to provide 360-degree cyber protection in the form of backup and recovery, malware defenses, and endpoint security and management.",
+      "Acronis Cyber Backup Cloud - The #1 hybrid cloud backup-as-a-service solution for service providers that protects more than 20 platforms, anytime, anywhere, and faster than anyone else.",
+      "Acronis Cyber Disaster Recovery Cloud - A turn-key, self-service solution that lets you protect your customers’ workloads by recovering their IT systems and applications using the Acronis cloud infrastructure.",
+      "Acronis Cyber Files Cloud - Designed exclusively for service providers, it delivers safe file sync and share in an easy-to-use, complete and secure cloud-based solution.",
+      "Acronis Cyber Notary Cloud - A blockchain-based service for file notarization, e-signing and verification for businesses of any size, designed exclusively for service providers."
+    ]
+  },
+  "logo": {
+    "filename": "logo.png"
+  },
+  "support": {
+    "homepage": "https://cloud.acronis.com/",
+    "docs_url": "https://dl.acronis.com/u/pdf/WHMCS_Integration_Manual_en-US.pdf"
+  },
+  "authors": [
+    {
+      "name": "Acronis",
+      "homepage": "https://www.acronis.com/"
+    }
+  ]
+}

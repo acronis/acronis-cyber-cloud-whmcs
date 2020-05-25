@@ -11,7 +11,6 @@ class CustomField extends AbstractModel
 {
     const TABLE = 'tblcustomfields';
 
-    const COLUMN_ID = 'id';
     const COLUMN_TYPE = 'type';
     const COLUMN_RELID = 'relid';
     const COLUMN_FIELDNAME = 'fieldname';
@@ -42,12 +41,4 @@ class CustomField extends AbstractModel
         self::COLUMN_SORTORDER,
         self::COLUMN_REGEXPR,
     ];
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->getAttribute(static::COLUMN_ID);
-    }
 }

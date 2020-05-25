@@ -15,7 +15,6 @@ class Server extends AbstractModel implements CloudServerInterface
 {
     const TABLE = 'tblservers';
 
-    const COLUMN_ID = 'id';
     const COLUMN_TYPE = 'type';
     const COLUMN_DISABLED = 'disabled';
     const COLUMN_NAME = 'name';
@@ -32,11 +31,11 @@ class Server extends AbstractModel implements CloudServerInterface
     public $timestamps = false;
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getType()
     {
-        return $this->getAttributeValue(static::COLUMN_ID);
+        return $this->getAttributeValue(static::COLUMN_TYPE);
     }
 
     /**

@@ -43,6 +43,7 @@ class CustomFieldsRepository extends AbstractRepository
             CustomField::COLUMN_SHOWINVOICE => $fieldMeta->isShowOnInvoice() ? CustomField::SETTING_ON : '',
             CustomField::COLUMN_SORTORDER => $fieldMeta->getSortPriority(),
         ]);
+        $this->enforceInsertId($customField);
 
         return $customField;
     }

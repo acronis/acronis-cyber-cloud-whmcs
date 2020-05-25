@@ -73,11 +73,12 @@ class ClientAreaPage extends AbstractController
             ->fetch('client_area.tpl');
 
         if ($request->getQueryParameter('a') !== static::MANAGEMENT_PAGE_HANDLER) {
+            $id =  $request->getQueryParameter('id') ?: $request->getBodyParameter('id');
             $this->redirect(
                 'clientarea.php',
                 [
                     'action' => $request->getQueryParameter('action'),
-                    'id' => $request->getQueryParameter('id'),
+                    'id' => $id,
                     'modop' => 'custom',
                     'a' => static::MANAGEMENT_PAGE_HANDLER
                 ]

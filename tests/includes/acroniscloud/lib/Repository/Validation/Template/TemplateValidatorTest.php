@@ -135,7 +135,7 @@ class TemplateValidatorTest extends \PHPUnit_Framework_TestCase
                 ],
                 false,
                 ['applications' => [
-                    'Offering item application type is different than application type in meta info. Details: {"application":"backup","offering_item":{"name":"fc_child_storages","measurement_unit":"feature","status":"inactive"},"metaInfo":{"application_type":"files_cloud","offering_item_name":"fc_child_storages","offering_item_friendly_name":"Partner-owned cloud storage","measurement_unit":"feature","configurable_option":{"friendly_name":"Partner-owned files cloud storage","measurement_unit":"feature","measurement_unit_name":"Enable"},"sort_priority":71}}',
+                    'Offering item application type is different than application type in meta info. Details: {"application":"backup","offering_item":{"name":"fc_child_storages","measurement_unit":"feature","status":"inactive"},"metaInfo":{"application_type":"files_cloud","offering_item_name":"fc_child_storages","offering_item_friendly_name":"Partner-owned cloud storage","measurement_unit":"feature","configurable_option":{"friendly_name":"Partner-owned files cloud storage","measurement_unit":"feature","measurement_unit_name":"Enable"},"sort_priority":146}}',
                 ]],
             ],
             'offering item has mismatching measurement unit in meta' => [

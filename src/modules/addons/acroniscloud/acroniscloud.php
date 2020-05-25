@@ -41,3 +41,12 @@ function acroniscloud_output()
     echo $dispatcher->dispatch(__FILE__, __FUNCTION__);
 }
 
+
+function acroniscloud_upgrade($parameters)
+{
+    /** @var Dispatcher $dispatcher */
+    $dispatcher = Locator::getInstance()->get(DispatcherFactory::NAME);
+
+    echo $dispatcher->dispatch(__FILE__, __FUNCTION__, $parameters);
+}
+

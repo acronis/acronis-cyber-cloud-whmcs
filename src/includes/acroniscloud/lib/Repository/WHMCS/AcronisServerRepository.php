@@ -16,7 +16,7 @@ class AcronisServerRepository extends AbstractRepository
      */
     public function all()
     {
-        return Server::where('type', ACRONIS_CLOUD_SERVICE_NAME)
+        return Server::where(Server::COLUMN_TYPE, ACRONIS_CLOUD_SERVICE_NAME)
             ->get();
     }
 

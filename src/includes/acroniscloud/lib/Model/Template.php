@@ -19,7 +19,6 @@ class Template extends AbstractModel
 
     const TABLE = 'acroniscloud_service_templates';
 
-    const COLUMN_ID = 'id';
     const COLUMN_NAME = 'name';
     const COLUMN_DESCRIPTION = 'description';
     const COLUMN_SERVER_ID = 'server_id';
@@ -69,6 +68,15 @@ class Template extends AbstractModel
     ];
 
     /**
+     * Enforce server is an integer to prevent ui issues
+     *
+     * @var array
+     */
+    protected $casts = [
+        self::COLUMN_SERVER_ID => self::TYPE_INTEGER,
+    ];
+
+    /**
      * List of applications that this template has access to
      *
      * @return HasMany
@@ -76,14 +84,6 @@ class Template extends AbstractModel
     public function applications()
     {
         return $this->hasMany(TemplateApplication::class);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->getAttributeValue(static::COLUMN_ID);
     }
 
     /**

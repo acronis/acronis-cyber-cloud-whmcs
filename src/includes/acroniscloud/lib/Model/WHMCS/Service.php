@@ -16,7 +16,6 @@ class Service extends AbstractModel
 {
     const TABLE = 'tblhosting';
 
-    const COLUMN_ID = 'id';
     const COLUMN_USER_ID = 'userid';
     const COLUMN_PRODUCT_ID = 'packageid';
     const COLUMN_SERVER_ID = 'server';
@@ -32,14 +31,6 @@ class Service extends AbstractModel
 
     const DATE_FORMAT = 'Y-m-d\TH:i:s\Z';
     const DATE_MISSING = '0000-00-00';
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->getAttributeValue(static::COLUMN_ID);
-    }
 
     /**
      * @return int

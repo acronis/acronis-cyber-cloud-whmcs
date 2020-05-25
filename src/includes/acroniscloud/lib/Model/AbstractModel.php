@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractModel extends Model
 {
+    const COLUMN_ID = 'id';
+
+    /**
+     * Valid types for column casting
+     */
+    const TYPE_INTEGER = 'integer';
+    const TYPE_ARRAY = 'array';
+
     /**
      * Required for Eloquent
      *
@@ -21,5 +29,21 @@ abstract class AbstractModel extends Model
         parent::__construct($attributes);
 
         $this->table = static::TABLE;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->getAttributeValue(static::COLUMN_ID);
+    }
+
+    /**
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->setAttribute(static::COLUMN_ID, intval($id));
     }
 }

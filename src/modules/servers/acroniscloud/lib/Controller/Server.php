@@ -46,7 +46,7 @@ class Server extends AbstractController
     {
         $parameters = $request->getParameters();
         $serverId = Arr::get($parameters, RequestParametersServer::PARAMETER_SERVER_ID);
-        if (!$this->initServer($serverId)) {
+        if (!$this->initServer($serverId) || $this->getCloudServer()->getType() !== ACRONIS_CLOUD_SERVICE_NAME) {
             return;
         }
 
@@ -108,7 +108,7 @@ class Server extends AbstractController
     {
         $parameters = $request->getParameters();
         $serverId = Arr::get($parameters, RequestParametersServer::PARAMETER_SERVER_ID);
-        if (!$this->initServer($serverId)) {
+        if (!$this->initServer($serverId) || $this->getCloudServer()->getType() !== ACRONIS_CLOUD_SERVICE_NAME) {
             return;
         }
 
@@ -174,6 +174,7 @@ class Server extends AbstractController
             );
 
             $labels = [
+                'url_hostname' => $this->gettext('URL, Hostname or IP'),
                 'username' => $this->gettext('Username'),
                 'password' => $this->gettext('Password'),
                 'client_id' => $this->gettext('Client ID'),
