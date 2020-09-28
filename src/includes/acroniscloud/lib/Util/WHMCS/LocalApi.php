@@ -26,6 +26,13 @@ class LocalApi
         return $encrypted['password'];
     }
 
+    public static function updateService($serviceId, $updateParams)
+    {
+        $params = ['serviceid' => $serviceId] + $updateParams;
+
+        return static::call('UpdateClientProduct', $params);
+    }
+
     private static function call($method, $parameters)
     {
         $result = DatabaseLogging::runWithoutLogs(function () use ($method, $parameters) {

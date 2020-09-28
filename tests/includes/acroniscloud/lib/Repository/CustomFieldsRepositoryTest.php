@@ -57,6 +57,7 @@ class CustomFieldsRepositoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $createCustomFieldsMock = $this->getMockBuilder(CustomFieldsRepository::class)
+            ->setConstructorArgs([false])
             ->setMethods(['create'])
             ->getMock();;
         $createCustomFieldsMock->expects($this->once())
@@ -94,6 +95,7 @@ class CustomFieldsRepositoryTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $createCustomFieldsMock = $this->getMockBuilder(CustomFieldsRepository::class)
+            ->setConstructorArgs([false])
             ->setMethods(['create'])
             ->getMock();;
         $createCustomFieldsMock->expects($this->once())

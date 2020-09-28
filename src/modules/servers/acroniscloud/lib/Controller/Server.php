@@ -7,6 +7,7 @@ namespace WHMCS\Module\Server\AcronisCloud\Controller;
 
 use Acronis\Cloud\Client\HttpException;
 use Acronis\Cloud\Client\Model\Clients\ClientPost;
+use Acronis\Cloud\Client\Model\Reports\Stored\StoredReportParamsItems;
 use Acronis\Cloud\Client\Model\Tenants\TenantPut;
 use AcronisCloud\CloudApi\AuthorizedApi;
 use AcronisCloud\CloudApi\CloudApiTrait;

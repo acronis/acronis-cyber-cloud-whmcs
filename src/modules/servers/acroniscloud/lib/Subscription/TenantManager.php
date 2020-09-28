@@ -154,34 +154,25 @@ class TenantManager
     public function updateUserRoles($user, $tenant, $userRole)
     {
         $cloudApi = $this->getCloudApi();
-        $platformId = $cloudApi->getApplicationByType(ApiInterface::APPLICATION_TYPE_PLATFORM)
-            ->getId();
-
-        $roles = $cloudApi->getTenantApplicationsRoles($user->getTenantId());
         $userRoles = [];
-        foreach ($roles as $role) {
-            $roleName = $role->getRole();
-
-            // skip all roles for Management Portal
-            if ($role->getApplicationId() === $platformId) {
-                continue;
+        if ($userRole === static::ROLE_ADMIN) {
+            // set admin role for partner and customer
+            switch ($tenant->getKind()) {
+                case ApiInterface::TENANT_KIND_PARTNER:
+                    $userRoles[] = Role::PARTNER_ADMIN;
+                break;
+                case ApiInterface::TENANT_KIND_CUSTOMER:
+                    $userRoles[] = Role::COMPANY_ADMIN;
+                break;
             }
-
-            // enable all roles for other services
-            $userRoles[] = $roleName;
-        }
-
-        // enable roles for Management Portal based on the template
-        $isAdmin = $userRole === static::ROLE_ADMIN;
-        $tenantKind = $tenant->getKind();
-        if ($tenantKind === ApiInterface::TENANT_KIND_CUSTOMER) {
-            if ($isAdmin) {
-                $userRoles[] = Role::COMPANY_ADMIN;
+        } else {
+            // set default roles for partner and customer
+            $roles = $cloudApi->getTenantApplicationsRoles($user->getTenantId());
+            foreach ($roles as $role) {
+                if ($role->getIsDefault()) {
+                    $userRoles[] = $role->getRole();
+                }
             }
-        } elseif ($tenantKind === ApiInterface::TENANT_KIND_PARTNER) {
-            $userRoles[] = $isAdmin
-                ? Role::PARTNER_ADMIN
-                : Role::READONLY_ADMIN;
         }
 
         $accessPolicies = array_map(function ($role) use ($user) {

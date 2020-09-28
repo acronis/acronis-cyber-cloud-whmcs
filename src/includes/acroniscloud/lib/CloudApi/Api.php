@@ -1331,12 +1331,14 @@ class Api extends AuthorizedApi
 
         $fp = fopen($destinationFile, 'wb');
         try {
-            $client->request('GET', $url, [
-                'sink' => $fp,
+            $request = $client->createRequest('GET', $url, [
+                'save_to' => $fp,
                 'headers' => $headers,
                 'verify' => false,
                 'decode_content' => false,
             ]);
+
+            $client->send($request);
         } catch (BadResponseException $e) {
             throw new HttpException($e->getMessage(), $e->getCode());
         } catch (GuzzleException $e) {

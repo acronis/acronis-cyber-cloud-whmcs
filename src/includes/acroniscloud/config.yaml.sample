@@ -14,3 +14,8 @@ cache:
   storage_type: null
 product:
   overage_ratio: 1.0
+usage_report:
+  download_path: tmp/reports
+  downloaded_files_ttl_in_days: 2
+  retries_limit: 2
+  retry_timeout: 300

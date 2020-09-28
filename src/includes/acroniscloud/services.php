@@ -15,6 +15,8 @@ use AcronisCloud\Service\Localization\TranslatorFactory;
 use AcronisCloud\Service\Logger\LoggerFactory;
 use AcronisCloud\Service\MetaInfo\MetaInfoFactory;
 use AcronisCloud\Service\Session\SessionFactory;
+use AcronisCloud\Service\UsageReport\UsageReportManagerFactory;
+use AcronisCloud\Service\UsageReport\MetricsFetcherFactory;
 
 return [
     AddonConfigFactory::NAME => new AddonConfigFactory(),
@@ -28,4 +30,6 @@ return [
     TranslatorFactory::NAME => new TranslatorFactory(),
     SessionFactory::NAME => new SessionFactory(),
     ProvisioningErrorsFactory::NAME => new ProvisioningErrorsFactory(),
+    UsageReportManagerFactory::NAME => new UsageReportManagerFactory(),
+    MetricsFetcherFactory::NAME => new MetricsFetcherFactory(),
 ];

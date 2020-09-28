@@ -6,7 +6,7 @@
 namespace AcronisCloud\Service\Localization;
 
 use AcronisCloud\Util\WHMCS\Lang;
-use Symfony\Component\Translation\Translator;
+use Illuminate\Translation\Translator;
 
 class TranslatorFactoryTest extends \PHPUnit_Framework_TestCase
 {

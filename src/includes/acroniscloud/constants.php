@@ -23,3 +23,6 @@ define('ACRONIS_CLOUD_ADDON_MODULE_DIR', ACRONIS_CLOUD_WHMCS_DIR . '/modules/add
 
 defined('ACRONIS_CLOUD_SERVER_MODULE_DIR') ||
 define('ACRONIS_CLOUD_SERVER_MODULE_DIR', ACRONIS_CLOUD_WHMCS_DIR . '/modules/servers/acroniscloud');
+
+defined('DIR_BIN') ||
+define('DIR_BIN', ACRONIS_CLOUD_WHMCS_DIR);

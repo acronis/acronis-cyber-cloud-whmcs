@@ -19,6 +19,7 @@ use WHMCS\Module\Server\AcronisCloud\Controller\CustomHeaderOutput;
 use WHMCS\Module\Server\AcronisCloud\Controller\Product;
 use WHMCS\Module\Server\AcronisCloud\Controller\Server;
 use WHMCS\Module\Server\AcronisCloud\Controller\Subscription;
+use WHMCS\Module\Server\AcronisCloud\Controller\Report;
 
 return new ModuleRouter([
     'addons' => new ModuleActionRouter([
@@ -63,6 +64,7 @@ return new ModuleRouter([
             'get_usages' => [ClientAreaApi::class, 'getUsages', Request::GET],
             'l10n' => [L10n::class, 'getL10n', Request::GET],
         ], 'index', 'a'),
+        'MetricProvider' => [Report::class, 'getMetricProvider'],
     ]),
     'hooks' => new ModuleActionRouter([
         'ServerAdd' => [Server::class, 'updateServerInfo'],
@@ -74,5 +76,8 @@ return new ModuleRouter([
         'OrderProductUpgradeOverride' => [Product::class, 'beforeUpgrade'],
         'AdminAreaHeaderOutput' => [Server::class, 'adminOutput'],
         'ClientAreaHeaderOutput' => [CustomHeaderOutput::class, 'clientOutput'],
+        'AfterModuleChangePackageFailed' => [Subscription::class, 'undoUpgrade'],
+        'AfterCronJob' => [Report::class, 'afterCronJob'],
+        'DailyCronJob' => [Report::class, 'dailyCronJob'],
     ]),
 ]);

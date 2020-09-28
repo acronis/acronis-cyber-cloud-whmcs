@@ -14,6 +14,15 @@ use Illuminate\Database\Eloquent\Builder;
 class ServiceRepository extends AbstractRepository
 {
     /**
+     * @param int $serviceId
+     * @return Service
+     */
+    public function find($serviceId)
+    {
+        return Service::find($serviceId);
+    }
+
+    /**
      * @param int $userId
      * @return Service[]
      */

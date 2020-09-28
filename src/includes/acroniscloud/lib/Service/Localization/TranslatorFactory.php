@@ -8,7 +8,8 @@ namespace AcronisCloud\Service\Localization;
 use AcronisCloud\Service\FactoryInterface;
 use AcronisCloud\Util\WHMCS\Lang;
 use Symfony\Component\Translation\Loader\PoFileLoader;
-use Symfony\Component\Translation\Translator;
+use AcronisCloud\Service\Localization\Translator as Translator;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
 class TranslatorFactory implements FactoryInterface
 {
@@ -17,12 +18,12 @@ class TranslatorFactory implements FactoryInterface
     const FILE_FORMAT = 'po';
 
     /**
-     * @return Translator
+     * @return mixed
      */
     public function createInstance()
     {
         $whmcsLocale = $this->getLocale();
-        $translator = new Translator($whmcsLocale);
+        $translator = $this->getTranslator($whmcsLocale);
         $translator->addLoader(static::FILE_FORMAT, new PoFileLoader());
 
         $translations = $this->getTranslations();
@@ -54,5 +55,18 @@ class TranslatorFactory implements FactoryInterface
         }
 
         return $translations;
+    }
+
+    /**
+     * @param string $whmcsLocale
+     * @return mixed
+     */
+    private function getTranslator($whmcsLocale)
+    {
+        if (class_exists('Illuminate\Translation\Translator')) {
+            return new Translator($whmcsLocale);
+        }
+
+        return new SymfonyTranslator($whmcsLocale);
     }
 }

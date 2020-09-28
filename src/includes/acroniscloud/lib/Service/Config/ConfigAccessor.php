@@ -9,6 +9,7 @@ use AcronisCloud\Service\Config\Settings\CacheSettings;
 use AcronisCloud\Service\Config\Settings\CloudApiSettings;
 use AcronisCloud\Service\Config\Settings\LoggerSettings;
 use AcronisCloud\Service\Config\Settings\ProductSettings;
+use Acronis\UsageReport\Service\ReportSettings;
 use AcronisCloud\Util\Arr;
 use AcronisCloud\Util\MemoizeTrait;
 use AcronisCloud\Util\Str;
@@ -20,12 +21,14 @@ class ConfigAccessor
     const SECTION_CACHE = 'cache';
     const SECTION_CLOUD_API = 'cloud_api';
     const SECTION_PRODUCT = 'product';
+    const SECTION_USAGE_REPORT = 'usage_report';
 
     const CONFIG_SETTINGS = [
         self::SECTION_LOGGER => LoggerSettings::class,
         self::SECTION_CACHE => CacheSettings::class,
         self::SECTION_CLOUD_API => CloudApiSettings::class,
         self::SECTION_PRODUCT => ProductSettings::class,
+        self::SECTION_USAGE_REPORT => ReportSettings::class,
     ];
 
     private $data;
@@ -67,6 +70,15 @@ class ConfigAccessor
     public function getProductSettings()
     {
         return $this->getSettings(static::SECTION_PRODUCT);
+    }
+
+    /**
+     * @return ReportSettings
+     */
+    public function getUsageReportSettings()
+    {
+        return $this->getSettings(static::SECTION_USAGE_REPORT)
+            ->withBasePath(ACRONIS_CLOUD_INCLUDES_DIR);
     }
 
     private function getSettings($sectionName)

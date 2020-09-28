@@ -15,6 +15,7 @@ use AcronisCloud\Service\Logger\Processor\PasswordProtectProcessor;
 use AcronisCloud\Service\Logger\Processor\TokenProtectProcessor;
 use AcronisCloud\Service\Logger\Whmcs\ModuleLogFormatter;
 use AcronisCloud\Service\Logger\Whmcs\ModuleLogHandler;
+use AcronisCloud\Service\Logger\Whmcs\ModuleLogHandlerOld;
 use AcronisCloud\Service\Logger\Whmcs\ProtectSensitiveDataProcessor;
 use AcronisCloud\Service\Logger\Whmcs\ScopeCloudApiFormatter;
 use AcronisCloud\Service\Logger\Whmcs\ScopeCloudApiProcessor;
@@ -34,6 +35,8 @@ class LoggerFactory implements FactoryInterface
         RepositoryAwareTrait;
 
     const NAME = 'logger';
+
+    const MONOLOG_API_V2 = '2';
 
     const LOGGER_RECORD_FORMAT = '%datetime% %extra.uid% %level_name% %message% File: %extra.file%:%extra.line%';
 
@@ -105,7 +108,7 @@ class LoggerFactory implements FactoryInterface
     }
 
     /**
-     * @return ModuleLogHandler|null
+     * @return mixed
      */
     private function createModuleLogHandler()
     {
@@ -126,7 +129,7 @@ class LoggerFactory implements FactoryInterface
             return null;
         }
 
-        $moduleLog = new ModuleLogHandler();
+        $moduleLog = Logger::API >= static::MONOLOG_API_V2 ? new ModuleLogHandler() : new ModuleLogHandlerOld();
         $moduleLog->pushProcessor(new ProtectSensitiveDataProcessor());
         $scopes = [];
         if ($addonConfig->isLoggingDbQuery()) {

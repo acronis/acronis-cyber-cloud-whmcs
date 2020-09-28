@@ -104,3 +104,11 @@ function acroniscloud_TestConnection()
 
     return $dispatcher->dispatch(__FILE__, __FUNCTION__);
 }
+
+function acroniscloud_MetricProvider($parameters)
+{
+    /** @var Dispatcher $dispatcher */
+    $dispatcher = Locator::getInstance()->get(DispatcherFactory::NAME);
+
+    return $dispatcher->dispatch(__FILE__, __FUNCTION__, $parameters);
+}

@@ -6,12 +6,13 @@
 namespace AcronisCloud\Model\WHMCS;
 
 use Acronis\Cloud\Client\Model\Clients\ClientPostResult;
+use Acronis\UsageReport\Model\DatacenterInterface;
 use AcronisCloud\CloudApi\AuthorizedApi;
 use AcronisCloud\CloudApi\CloudServerInterface;
 use AcronisCloud\Model\AbstractModel;
 use AcronisCloud\Util\WHMCS\LocalApi;
 
-class Server extends AbstractModel implements CloudServerInterface
+class Server extends AbstractModel implements CloudServerInterface, DatacenterInterface
 {
     const TABLE = 'tblservers';
 

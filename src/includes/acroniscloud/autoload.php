@@ -7,3 +7,4 @@
 $loader = require __DIR__ . '/../../vendor/autoload.php';
 $loader->addPsr4('AcronisCloud\\', __DIR__ . '/lib');
 $loader->addPsr4('Acronis\\Cloud\\Client\\', __DIR__ . '/vendor/acronis/ci-lib-php-cloud-client/lib');
+$loader->addPsr4('Acronis\\UsageReport\\', __DIR__ . '/vendor/acronis/ci-lib-php-usage-report/src');

@@ -76,7 +76,7 @@
         },
         {
           "name": "o365_sharepoint_sites",
-          "measurement_unit": "feature",
+          "measurement_unit": "quantity",
           "status": "inactive"
         },
         {
@@ -216,7 +216,7 @@
         },
         {
           "name": "adv_o365_sharepoint_sites",
-          "measurement_unit": "feature",
+          "measurement_unit": "quantity",
           "status": "inactive"
         },
         {
@@ -315,7 +315,7 @@
         },
         {
           "name": "dre_o365_sharepoint_sites",
-          "measurement_unit": "feature",
+          "measurement_unit": "quantity",
           "status": "inactive"
         },
         {

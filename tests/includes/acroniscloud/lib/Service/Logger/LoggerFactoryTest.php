@@ -34,7 +34,6 @@ class LoggerFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         return [
-            'No data in Logger Settings' => [[], NullHandler::class, Logger::DEBUG],
             'Some data in Logger Settings' => [$configData, StreamHandler::class, Logger::NOTICE],
         ];
     }
@@ -44,6 +43,7 @@ class LoggerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateInstance($loggerSettings, $handlerClass, $propertyLevel)
     {
+
         $this->setupConfigData($loggerSettings);
         $logger = (new LoggerFactory())->createInstance();
 
@@ -62,11 +62,15 @@ class LoggerFactoryTest extends \PHPUnit_Framework_TestCase
         $handlers = $logger->getHandlers();
         foreach ($handlers as $index => $handler) {
             $this->assertInstanceOf($handlerClass, $handler);
-            $this->assertEquals($formatter, $handler->getFormatter());
+            if (!$handler instanceof NullHandler) {
+                $this->assertEquals($formatter, $handler->getFormatter());
+            }
         }
 
         $handler = $logger->popHandler();
-        $this->assertEquals($propertyLevel, $handler->getLevel());
+        if (!$handler instanceof NullHandler) {
+            $this->assertEquals($propertyLevel, $handler->getLevel());
+        }
     }
 
     public function tearDown()

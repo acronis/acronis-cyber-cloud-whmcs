@@ -61,6 +61,7 @@ class Product extends AbstractController
             'DisplayName' => ACRONIS_CLOUD_FRIENDLY_NAME,
             'APIVersion' => '1.1', // Use API Version 1.1
             'RequiresServer' => true, // Set true if module requires a server to work
+            'ListAccountsUniqueIdentifierField' => 'customfield.tenant_id',
         ];
     }
 

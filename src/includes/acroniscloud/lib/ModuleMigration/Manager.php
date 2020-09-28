@@ -76,7 +76,7 @@ class Manager
         self::CONFIG_OPTION_LOCAL_STORAGE_QUOTA => 'Local Storage',
         self::CONFIG_OPTION_MOBILE_DEVICES_QUOTA => 'Mobile Devices',
         self::CONFIG_OPTION_ACCOUNT_TYPE => 'Account type',
-        self::CONFIG_OPTION_O365_SEATS_QUOTA => 'Office 365 Mailboxes',
+        self::CONFIG_OPTION_O365_SEATS_QUOTA => 'Microsoft 365 Mailboxes',
         self::CONFIG_OPTION_ADMIN_PERMISSION => 'Administrator permission',
         self::CONFIG_OPTION_ACTIVATION_METHOD => 'Activation method',
         self::CONFIG_OPTION_STORAGE_MEASUREMENT_UNIT => 'Measure storage in',
@@ -594,7 +594,7 @@ class Manager
                         'status' => StatusInterface::STATUS_ACTIVE,
                         'name' => 'o365_sharepoint_sites',
                         'quota_value' => null,
-                        'measurement_unit' => UomConverter::FEATURE,
+                        'measurement_unit' => UomConverter::QUANTITY,
                     ];
                 }
             } else {

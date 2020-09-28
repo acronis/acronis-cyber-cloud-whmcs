@@ -4,7 +4,7 @@
 
 FROM centos:7
 
-ARG PHP_VERSION=56
+ARG PHP_VERSION=72
 
 VOLUME /mnt/target
 WORKDIR /mnt/target
@@ -21,11 +21,13 @@ RUN yum -y install \
   php-pdo_mysql \
   php-gd \
   php-imap \
+  php-intl \
   php-mbstring \
   php-soap \
   php-xml \
   php-xmlrpc \
   php-pecl-zip \
+  php-pecl-apc \
   php-pecl-apcu
 
 RUN sed -i 's/;date.timezone =/date.timezone = UTC/' /etc/php.ini

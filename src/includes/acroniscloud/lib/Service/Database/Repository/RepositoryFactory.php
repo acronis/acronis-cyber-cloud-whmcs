@@ -5,6 +5,8 @@
 
 namespace AcronisCloud\Service\Database\Repository;
 
+use AcronisCloud\Repository\ReportRepository;
+use AcronisCloud\Repository\ReportStorageRepository;
 use AcronisCloud\Repository\TemplateRepository;
 use AcronisCloud\Repository\WHMCS\AcronisServerRepository;
 use AcronisCloud\Repository\WHMCS\AddonModuleRepository;
@@ -15,6 +17,7 @@ use AcronisCloud\Repository\WHMCS\CustomFieldsValuesRepository;
 use AcronisCloud\Repository\WHMCS\ProductConfigGroupRepository;
 use AcronisCloud\Repository\WHMCS\ProductRepository;
 use AcronisCloud\Repository\WHMCS\ServiceRepository;
+use AcronisCloud\Repository\WHMCS\UpgradeRepository;
 use AcronisCloud\Service\FactoryInterface;
 
 class RepositoryFactory implements FactoryInterface
@@ -107,5 +110,29 @@ class RepositoryFactory implements FactoryInterface
     public function getServiceRepository()
     {
         return new ServiceRepository();
+    }
+
+    /**
+     * @return UpgradeRepository
+     */
+    public function getUpgradeRepository()
+    {
+        return new UpgradeRepository();
+    }
+
+    /**
+     * @return ReportRepository
+     */
+    public function getUsageReportRepository()
+    {
+        return new ReportRepository();
+    }
+
+    /**
+     * @return ReportStorageRepository
+     */
+    public function getReportStorageRepository()
+    {
+        return new ReportStorageRepository();
     }
 }

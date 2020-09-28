@@ -6,6 +6,8 @@
 namespace WHMCS\Module\Addon\AcronisCloud\Controller;
 
 use AcronisCloud\Localization\GetTextTrait;
+use AcronisCloud\Model\Report;
+use AcronisCloud\Model\ReportStorage;
 use AcronisCloud\Model\Template;
 use AcronisCloud\Model\TemplateApplication;
 use AcronisCloud\Model\TemplateOfferingItem;
@@ -84,6 +86,8 @@ class AddonSettings extends AbstractController
     public function activate()
     {
         $this->checkRights();
+
+        $this->createUsageReportsDBTables();
 
         if (!Capsule::schema()->hasTable(Template::TABLE)) {
             Capsule::schema()->create(Template::TABLE, function ($table) {
@@ -210,6 +214,10 @@ class AddonSettings extends AbstractController
                 $logger->debug($e->getTraceAsString());
             }
         }
+
+        if (version_compare($version, '2.2.0-145', '<')) {
+            $this->createUsageReportsDBTables();
+        }
     }
 
     /**
@@ -281,5 +289,31 @@ class AddonSettings extends AbstractController
         });
 
         return implode('@', $userParts);
+    }
+
+    private function createUsageReportsDBTables()
+    {
+        if (!Capsule::schema()->hasTable(Report::TABLE)) {
+            Capsule::schema()->create(Report::TABLE, function ($table) {
+                $table->increments(Report::COLUMN_ID);
+                $table->date(Report::COLUMN_DATE);
+                $table->unsignedInteger(Report::COLUMN_DATACENTER_ID);
+                $table->unsignedInteger(Report::COLUMN_STATUS);
+                $table->string(Report::COLUMN_REPORT_ID, 36)->nullable();
+                $table->string(Report::COLUMN_STORED_REPORT_ID, 36)->nullable();
+                $table->string(Report::COLUMN_FILE_PATH, 255)->nullable();
+                $table->unsignedInteger(Report::COLUMN_INSTANCE_ID)->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (!Capsule::schema()->hasTable(ReportStorage::TABLE)) {
+            Capsule::schema()->create(ReportStorage::TABLE, function ($table) {
+                $table->increments(ReportStorage::COLUMN_ID);
+                $table->string(ReportStorage::COLUMN_KEY, 100)->unique();
+                $table->longText(ReportStorage::COLUMN_VALUE);
+                $table->timestamps();
+            });
+        }
     }
 }

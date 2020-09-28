@@ -20,6 +20,9 @@ $hooks = [
     'AdminAreaHeaderOutput',
     'ClientAreaHeaderOutput',
     'OrderProductUpgradeOverride',
+    'AfterModuleChangePackageFailed',
+    'AfterCronJob',
+    'DailyCronJob'
 ];
 
 $outputHooks = [

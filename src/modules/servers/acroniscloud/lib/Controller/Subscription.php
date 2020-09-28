@@ -21,6 +21,7 @@ use AcronisCloud\Localization\GetTextTrait;
 use AcronisCloud\Model\Template;
 use AcronisCloud\Model\TemplateApplication;
 use AcronisCloud\Model\TemplateOfferingItem;
+use AcronisCloud\Model\WHMCS\Upgrade;
 use AcronisCloud\Service\Database\Repository\RepositoryAwareTrait;
 use AcronisCloud\Service\Dispatcher\AbstractController;
 use AcronisCloud\Service\Dispatcher\ActionInterface;
@@ -36,6 +37,7 @@ use AcronisCloud\Util\Arr;
 use AcronisCloud\Util\MemoizeTrait;
 use AcronisCloud\Util\Str;
 use AcronisCloud\Util\UomConverter;
+use AcronisCloud\Util\WHMCS\LocalApi;
 use Exception;
 use RuntimeException;
 use WHMCS\Module\Server\AcronisCloud\Exception\ProvisioningException;
@@ -157,6 +159,43 @@ class Subscription extends AbstractController
             }
 
             throw $e;
+        }
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @throws Exception
+     */
+    public function undoUpgrade($request)
+    {
+        $params = $request->getParameters();
+        if (!isset($params['params']['serviceid'])) {
+            $this->getLogger()->warning('Upgrade revert requested, but no service id found: ' . print_r($params, true));
+            return;
+        }
+
+        try {
+            $serviceId = $params['params']['serviceid'];
+            $upgrade = $this->getRepository()->getUpgradeRepository()->findLastForService($serviceId);
+            $oldValue = $upgrade->getOriginalValue();
+            $newValue = $upgrade->getNewValueWithoutPrice();
+            $this->getLogger()->notice(
+                'Reverting upgrade from productId {0} to productId {1} for service with id {2}',
+                [$oldValue, $newValue, $serviceId]
+            );
+            LocalApi::updateService($serviceId, ['pid' => $oldValue]);
+            // updateService() didn't work with custom fields, manually editing in db.
+            $customFields = new CustomFields($oldValue, $serviceId);
+            $cfValues = $params['params']['customfields'];
+            $customFields->setCloudLogin($cfValues[CustomFields::FIELD_NAME_CLOUD_LOGIN]);
+            $customFields->setTenantId($cfValues[CustomFields::FIELD_NAME_TENANT_ID]);
+            $customFields->setUserId($cfValues[CustomFields::FIELD_NAME_USER_ID]);
+            if ($upgrade->getStatus() === Upgrade::STATUS_COMPLETE) {
+                $upgrade->setStatus(Upgrade::STATUS_PENDING)->save();
+            }
+            $this->getLogger()->notice('Upgrade revert completed successfully');
+        } catch (\Exception $e) {
+            $this->getLogger()->error($e->getMessage());
         }
     }
 
