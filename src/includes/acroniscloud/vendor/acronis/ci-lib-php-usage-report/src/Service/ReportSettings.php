@@ -16,28 +16,11 @@ class ReportSettings implements UsageReportSettingsInterface
     private $settings;
 
     /**
-     * @var string
-     */
-    private $basePath;
-
-    /**
      * @param array $settings
      */
     public function __construct(array $settings)
     {
         $this->settings = $settings;
-    }
-
-    /**
-     * @param string $basePath
-     *
-     * @return self
-     */
-    public function withBasePath($basePath)
-    {
-        $this->basePath = $basePath;
-
-        return $this;
     }
 
     /**
@@ -77,14 +60,12 @@ class ReportSettings implements UsageReportSettingsInterface
     }
 
     /**
-     * @param $relativePath
+     * @param $filePath
      * @return string
      * @throws \Exception
      */
-    public function getAbsolutePath($relativePath)
+    public function getAbsolutePath($filePath)
     {
-        $filePath = $this->basePath . \DIRECTORY_SEPARATOR . $relativePath;
-
         $dirPath = dirname($filePath);
         $fileName = basename($filePath);
         $dirRealPath = realpath($dirPath);

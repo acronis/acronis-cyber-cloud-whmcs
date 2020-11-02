@@ -77,8 +77,7 @@ class ConfigAccessor
      */
     public function getUsageReportSettings()
     {
-        return $this->getSettings(static::SECTION_USAGE_REPORT)
-            ->withBasePath(ACRONIS_CLOUD_INCLUDES_DIR);
+        return $this->getSettings(static::SECTION_USAGE_REPORT);
     }
 
     private function getSettings($sectionName)
