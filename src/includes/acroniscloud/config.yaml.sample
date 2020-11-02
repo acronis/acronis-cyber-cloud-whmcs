@@ -17,5 +17,5 @@ product:
 usage_report:
   download_path: /var/log/acroniscloud/reports
   downloaded_files_ttl_in_days: 2
-  retries_limit: 2
+  retries_limit: 12
   retry_timeout: 300
