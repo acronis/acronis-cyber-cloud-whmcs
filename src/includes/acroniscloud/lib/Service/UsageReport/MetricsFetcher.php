@@ -141,7 +141,7 @@ class MetricsFetcher
     private function calculateReportRowUsage(&$metrics, $reportRow)
     {
         $metrics[$reportRow->getTenantId()][$this->getMetricName($reportRow)]
-            = $reportRow->getUsage(
+            += $reportRow->getUsage(
                 $this->getUsageStrategy($reportRow->getOfferingItemName()),
                 $this->getUsageCountingKind($reportRow->getTenantKind())
         );
