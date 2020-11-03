@@ -4,7 +4,8 @@
  * @Copyright © 2002-2020 Acronis International GmbH. This source code is distributed under MIT software license.
  */
 
-require_once(__DIR__ . DIRECTORY_SEPARATOR . 'init.php');
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'constants.php';
+require_once ACRONIS_CLOUD_WHMCS_DIR . DIRECTORY_SEPARATOR . 'init.php';
 
 use AcronisCloud\Repository\WHMCS\AcronisServerRepository;
 use AcronisCloud\Repository\ReportStorageRepository;
