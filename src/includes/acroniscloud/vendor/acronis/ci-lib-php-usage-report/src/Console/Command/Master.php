@@ -90,6 +90,7 @@ TEXT;
                     '/usr/bin/env',
                     [
                         'php',
+                        '-q',
                         $manageCommandPath,
                         Process::COMMAND_NAME,
                         $datacenter->getId()
