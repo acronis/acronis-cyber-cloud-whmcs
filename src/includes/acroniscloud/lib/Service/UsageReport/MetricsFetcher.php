@@ -181,9 +181,18 @@ class MetricsFetcher
     {
         $offeringItemName = $reportRow->getOfferingItemName();
         $infraBackendType = $reportRow->getInfraBackendType();
+        $infraOwnerId = $reportRow->getInfraOwnerId();
+        $tenantId = $reportRow->getTenantId();
 
         if ($infraBackendType) {
             return \sprintf('%s_%s', $offeringItemName, $infraBackendType);
+        } elseif ($infraOwnerId === $tenantId) {
+            switch ($offeringItemName) {
+                case 'pg_storage': return 'pg_child_storages'; break;
+                case 'pw_storage': return 'pg_child_storages'; break;
+                case 'pw_dr_storage': return 'pw_dr_child_storage'; break;
+                case 'fc_storage': return 'fc_child_storages'; break;
+            }
         }
 
         return $offeringItemName;
