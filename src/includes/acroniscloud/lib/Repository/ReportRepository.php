@@ -25,7 +25,8 @@ class ReportRepository extends AbstractRepository implements ReportEntryReposito
     */
     public function getReportsTillDate($date, $fetchErased = false)
     {
-        $statement = Report::where(Report::COLUMN_DATE, '<=', $date);
+        $statement = Report::where(Report::COLUMN_DATE, '<=', $date)
+            ->orWhere(Report::COLUMN_STATUS, '=', Report::REPORT_STATUS_MARK_FOR_DELETION);
 
         if (!$fetchErased) {
             $statement = $statement->where(Report::COLUMN_STATUS, '!=', Report::REPORT_STATUS_ERASED);

@@ -84,7 +84,7 @@ final class ViewList extends Command
 
         if (!count($reports)) {
             $output->writeln('There are no reports to be processed.');
-            return;
+            return 0;
         }
 
         $output->writeln('List of reports:');
@@ -94,6 +94,8 @@ final class ViewList extends Command
         $table->render();
 
         $output->writeln($tableOutput->fetch());
+
+        return 0;
     }
 
     protected function getCommandName()

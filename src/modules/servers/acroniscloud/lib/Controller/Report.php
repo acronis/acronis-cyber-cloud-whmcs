@@ -8,24 +8,29 @@ namespace WHMCS\Module\Server\AcronisCloud\Controller;
 use Acronis\UsageReport\Console\Command\Master;
 use Acronis\UsageReport\Service\ReportHelper;
 use Acronis\UsageReport\Service\ReportProcessor;
+use Acronis\UsageReport\UsageReportSettingsInterface;
 use AcronisCloud\Model\ReportStorage;
 use AcronisCloud\Repository\ReportRepository;
 use AcronisCloud\Repository\ReportStorageRepository;
 use AcronisCloud\Repository\WHMCS\AcronisServerRepository;
+use AcronisCloud\Service\Config\ConfigAwareTrait;
+use AcronisCloud\Service\Database\Repository\RepositoryAwareTrait;
 use AcronisCloud\Service\Dispatcher\AbstractController;
 use AcronisCloud\Service\Dispatcher\RequestInterface;
 use AcronisCloud\Service\Logger\LoggerAwareTrait;
 use AcronisCloud\Service\UsageReport\UsageReportManagerAwareTrait;
+use Symfony\Component\Console\Input\ArrayInput;
 use WHMCS\Module\Server\AcronisCloud\MetricProvider;
 use WHMCS\UsageBilling\Contracts\Metrics\ProviderInterface;
 use Acronis\UsageReport\Exception\ManagerException;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Report extends AbstractController
 {
     use LoggerAwareTrait;
+    use RepositoryAwareTrait;
     use UsageReportManagerAwareTrait;
+    use ConfigAwareTrait;
 
     /**
      * @param RequestInterface $request
@@ -49,10 +54,17 @@ class Report extends AbstractController
      */
     public function afterCronJob($request)
     {
+        if (!$this->hasBillingMetricsProducts()) {
+            $this->getLogger()->notice('hook: afterCronJob | Skipping, no metrics enabled');
+            return;
+        }
+
         $this->getLogger()->notice('hook: afterCronJob | Running Master command');
+        $cliInterpreter = $this->getConfig()->getUsageReportSettings()->getCliInterpreter();
+        $input = new ArrayInput([UsageReportSettingsInterface::PROPERTY_PHP_CLI_INTERPRETER => $cliInterpreter]);
 
         $master = new Master(new AcronisServerRepository());
-        $master->run(new ArgvInput(), new ConsoleOutput());
+        $master->run($input, new ConsoleOutput());
 
         $this->getLogger()->notice('hook: afterCronJob COMPLETE');
     }
@@ -64,9 +76,23 @@ class Report extends AbstractController
      */
     public function dailyCronJob($request)
     {
+        if (!$this->hasBillingMetricsProducts()) {
+            $this->getLogger()->notice('hook: dailyCronJob | Skipping, no metrics enabled');
+            return;
+        }
+
         $this->getLogger()->notice('hook: dailyCronJob | Erasing usage reports');
 
         $this->getUsageReportManager()->eraseReports();
     }
 
+    /**
+     * @return bool
+     */
+    protected function hasBillingMetricsProducts()
+    {
+        return $this->getRepository()
+            ->getBillingMetricsRepository()
+            ->activeAcronisMetricsExist();
+    }
 }

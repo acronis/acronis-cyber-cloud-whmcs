@@ -164,8 +164,7 @@ class ServiceTemplate extends TemplateHandler
         foreach ($applications as $application) {
             $type = $application->getType();
             $applicationMeta = $this->getMetaInfo()->getApplicationMeta($type);
-            $tenantKinds = $applicationMeta->getTenantKinds();
-            if (!$applicationMeta || !$tenantKinds) {
+            if (!$applicationMeta || !($tenantKinds = $applicationMeta->getTenantKinds())) {
                 // skip applications that are unknown
                 continue;
             }

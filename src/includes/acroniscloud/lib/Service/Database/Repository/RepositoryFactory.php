@@ -10,6 +10,7 @@ use AcronisCloud\Repository\ReportStorageRepository;
 use AcronisCloud\Repository\TemplateRepository;
 use AcronisCloud\Repository\WHMCS\AcronisServerRepository;
 use AcronisCloud\Repository\WHMCS\AddonModuleRepository;
+use AcronisCloud\Repository\WHMCS\BillingMetricsRepository;
 use AcronisCloud\Repository\WHMCS\ConfigurationRepository;
 use AcronisCloud\Repository\WHMCS\CurrencyRepository;
 use AcronisCloud\Repository\WHMCS\CustomFieldsRepository;
@@ -62,6 +63,14 @@ class RepositoryFactory implements FactoryInterface
     public function getProductRepository()
     {
         return new ProductRepository();
+    }
+
+    /**
+     * @return BillingMetricsRepository
+     */
+    public function getBillingMetricsRepository()
+    {
+        return new BillingMetricsRepository();
     }
 
     /**

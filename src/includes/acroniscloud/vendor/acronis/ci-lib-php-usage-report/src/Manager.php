@@ -106,9 +106,9 @@ class Manager implements ManagerInterface
     {
         $api = $this->getCloudApiForServer($reportEntry->getDatacenter());
 
-        $downloadPath = $this->resolveReportDownloadPath($reportEntry);
-        if (!file_exists($downloadPath)) {
-            mkdir($downloadPath);
+        $reportsPath = $this->resolveReportDownloadPath($reportEntry);
+        if (!$this->ensureDirExists($reportsPath)) {
+            return;
         }
 
         $destinationFilePath = $this->generateReportPath($reportEntry);
@@ -125,10 +125,12 @@ class Manager implements ManagerInterface
     public function cleanReportDownloadPath()
     {
         $this->getLogger()->notice('Cleaning up reports download path recursively.');
+        $reportBasePath = $this->usageReportSettings->getReportsBasePath();
+        if (!is_dir($reportBasePath)) {
+            return;
+        }
 
-        $this->fileManager->removeFilesRecursively(
-            $this->usageReportSettings->getReportsBasePath()
-        );
+        $this->fileManager->removeFilesRecursively($reportBasePath);
         $this->getLogger()->notice('Done cleaning up reports download path.');
     }
 
@@ -233,7 +235,6 @@ class Manager implements ManagerInterface
 
     /**
      * @param ReportEntryInterface $reportEntry
-     *
      * @return string
      */
     private function resolveReportDownloadPath($reportEntry)
@@ -242,5 +243,14 @@ class Manager implements ManagerInterface
             $this->usageReportSettings->getReportsBasePath(),
             $reportEntry->getDate(),
         ]);
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    private function ensureDirExists($path)
+    {
+        return is_dir($path) || mkdir($path, 0777, true);
     }
 }

@@ -5,6 +5,8 @@
 
 namespace AcronisCloud\Service\Config;
 
+use AcronisCloud\Model\WHMCS\FileAssetSetting;
+use AcronisCloud\Model\WHMCS\StorageConfiguration;
 use AcronisCloud\Service\Config\Settings\CacheSettings;
 use AcronisCloud\Service\Config\Settings\CloudApiSettings;
 use AcronisCloud\Service\Config\Settings\LoggerSettings;
@@ -77,8 +79,14 @@ class ConfigAccessor
      */
     public function getUsageReportSettings()
     {
+        /** @var StorageConfiguration $downloadStorage */
+        $downloadStorage = FileAssetSetting::where(FileAssetSetting::COLUMN_TYPE, FileAssetSetting::TYPE_DOWNLOAD)
+            ->first()
+            ->storage;
+        $basePath = $downloadStorage->localPath();
+
         return $this->getSettings(static::SECTION_USAGE_REPORT)
-            ->withBasePath(ACRONIS_CLOUD_INCLUDES_DIR);
+            ->withBasePath($basePath);
     }
 
     private function getSettings($sectionName)

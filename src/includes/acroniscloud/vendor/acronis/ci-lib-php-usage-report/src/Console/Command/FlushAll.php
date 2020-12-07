@@ -75,6 +75,8 @@ TEXT;
         $this->flushReportsTable();
         $this->cleanReportDownloadPath();
         $this->invalidateReportData();
+
+        return 0;
     }
 
     private function flushReportsTable()

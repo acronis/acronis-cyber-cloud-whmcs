@@ -145,7 +145,8 @@ class Template extends AbstractModel
     {
         $templateIdCol = ProductOptions::getConfigOptionName(ProductOptions::INDEX_TEMPLATE_ID);
 
-        return $this->hasMany(Product::class, $templateIdCol, static::COLUMN_ID);
+        return $this->hasMany(Product::class, $templateIdCol, static::COLUMN_ID)
+            ->where(Product::COLUMN_SERVER_TYPE, ACRONIS_CLOUD_SERVICE_NAME);
     }
 
     /**

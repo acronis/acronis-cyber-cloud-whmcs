@@ -11,6 +11,7 @@ interface UsageReportSettingsInterface
     const PROPERTY_RETRY_TIMEOUT = 'retry_timeout';
     const PROPERTY_DOWNLOAD_PATH = 'download_path';
     const PROPERTY_REPORTS_TTL_DAYS = 'downloaded_files_ttl_in_days';
+    const PROPERTY_PHP_CLI_INTERPRETER = 'php_cli_interpreter';
 
     /**
      * @return int
@@ -32,4 +33,8 @@ interface UsageReportSettingsInterface
      */
     public function getReportsTtlInDays();
 
+    /**
+     * @return string
+     */
+    public function getCliInterpreter();
 }

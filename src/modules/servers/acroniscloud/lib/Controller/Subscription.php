@@ -177,6 +177,9 @@ class Subscription extends AbstractController
         try {
             $serviceId = $params['params']['serviceid'];
             $upgrade = $this->getRepository()->getUpgradeRepository()->findLastForService($serviceId);
+            if (!$upgrade) {
+                return;
+            }
             $oldValue = $upgrade->getOriginalValue();
             $newValue = $upgrade->getNewValueWithoutPrice();
             $this->getLogger()->notice(

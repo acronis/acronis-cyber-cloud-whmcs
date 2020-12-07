@@ -17,6 +17,7 @@ interface ReportEntryInterface
     const REPORT_STATUS_DOWNLOADED = 4;
     const REPORT_STATUS_AGGREGATED = 5;
     const REPORT_STATUS_ERASED = 6;
+    const REPORT_STATUS_MARK_FOR_DELETION = 7; // used when current process cannot delete the files
 
     const ALLOWED_STATUSES = [
         self::REPORT_STATUS_ERROR => 'Error',
@@ -26,6 +27,7 @@ interface ReportEntryInterface
         self::REPORT_STATUS_DOWNLOADED => 'Downloaded and saved',
         self::REPORT_STATUS_AGGREGATED => 'Aggregated',
         self::REPORT_STATUS_ERASED => 'Erased',
+        self::REPORT_STATUS_MARK_FOR_DELETION => 'To be deleted'
     ];
 
     public function getId();
@@ -66,4 +68,5 @@ interface ReportEntryInterface
 
     public function downloaded($filePath);
 
+    public function markForDeletion();
 }

@@ -18,7 +18,7 @@ class ReportSettings implements UsageReportSettingsInterface
     /**
      * @var string
      */
-    private $basePath;
+    private $basePath = '';
 
     /**
      * @param array $settings
@@ -45,7 +45,7 @@ class ReportSettings implements UsageReportSettingsInterface
      */
     public function getRetriesLimit()
     {
-        return Arr::get($this->settings, static::PROPERTY_RETRIES_LIMIT, false);
+        return Arr::get($this->settings, static::PROPERTY_RETRIES_LIMIT, 2);
     }
 
     /**
@@ -53,7 +53,7 @@ class ReportSettings implements UsageReportSettingsInterface
      */
     public function getRetryTimeout()
     {
-        return Arr::get($this->settings, static::PROPERTY_RETRY_TIMEOUT, false);
+        return Arr::get($this->settings, static::PROPERTY_RETRY_TIMEOUT, 300);
     }
 
     /**
@@ -63,7 +63,7 @@ class ReportSettings implements UsageReportSettingsInterface
      */
     public function getReportsBasePath()
     {
-        $downloadPath = Arr::get($this->settings, static::PROPERTY_DOWNLOAD_PATH, false);
+        $downloadPath = Arr::get($this->settings, static::PROPERTY_DOWNLOAD_PATH, 'acronis/reports');
 
         return $this->getAbsolutePath($downloadPath);
     }
@@ -73,30 +73,41 @@ class ReportSettings implements UsageReportSettingsInterface
      */
     public function getReportsTtlInDays()
     {
-        return Arr::get($this->settings, static::PROPERTY_REPORTS_TTL_DAYS, false);
+        return Arr::get($this->settings, static::PROPERTY_REPORTS_TTL_DAYS, 2);
     }
 
     /**
-     * @param $relativePath
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function getCliInterpreter()
+    {
+        return Arr::get($this->settings, static::PROPERTY_PHP_CLI_INTERPRETER, 'php');
+    }
+
+    /**
+     * @param string $relativePath
      * @return string
      * @throws \Exception
      */
     public function getAbsolutePath($relativePath)
     {
         $filePath = $this->basePath . \DIRECTORY_SEPARATOR . $relativePath;
-
+        if (!is_dir($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
         $dirPath = dirname($filePath);
         $fileName = basename($filePath);
         $dirRealPath = realpath($dirPath);
 
         if ($dirRealPath === false) {
             throw new \Exception(\sprintf(
-                'There is no access to folder "%s" with specified file "%s".',
-                $dirRealPath, $fileName
+                'There is no access to folder "%s" with specified file "%s". Configured report folder: "%s"',
+                $dirRealPath, $fileName, $filePath
             ));
         }
 
         return $dirRealPath . \DIRECTORY_SEPARATOR . $fileName;
     }
-
 }

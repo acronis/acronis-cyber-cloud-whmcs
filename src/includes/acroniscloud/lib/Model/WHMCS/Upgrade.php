@@ -7,12 +7,17 @@ namespace AcronisCloud\Model\WHMCS;
 
 use AcronisCloud\Model\AbstractModel;
 use AcronisCloud\Util\Arr;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property Product originalProduct
+ */
 class Upgrade extends AbstractModel
 {
     const TABLE = 'tblupgrades';
 
     const COLUMN_RELID = 'relid';
+    const COLUMN_TYPE = 'type';
     const COLUMN_ORIGINALVALUE = 'originalvalue';
     const COLUMN_NEWVALUE = 'newvalue';
     const COLUMN_STATUS = 'status';
@@ -20,14 +25,18 @@ class Upgrade extends AbstractModel
     const STATUS_PENDING = 'Pending';
     const STATUS_COMPLETE = 'Completed';
 
+    const TYPE_PACKAGE = 'package';
+
+    const RELATION_ORIGINAL_PRODUCT = 'originalProduct';
+
     public $timestamps = false;
 
     /**
      * @return string
      */
-    public function getRelatedId()
+    public function getType()
     {
-        return $this->getAttributeValue(static::COLUMN_RELID);
+        return $this->getAttributeValue(static::COLUMN_TYPE);
     }
 
     /**
@@ -77,5 +86,13 @@ class Upgrade extends AbstractModel
         $this->setAttribute(static::COLUMN_STATUS, $status);
 
         return $this;
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function originalProduct()
+    {
+        return $this->hasOne(Product::class, Product::COLUMN_ID, static::COLUMN_ORIGINALVALUE);
     }
 }

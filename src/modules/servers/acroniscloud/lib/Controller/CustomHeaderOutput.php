@@ -48,9 +48,10 @@ class CustomHeaderOutput extends AbstractController
     {
         $errorsManager = $this->getProvisioningErrorsManager();
         if ($errorsManager->hasErrors()) {
-            $error = array_first($errorsManager->getErrors());
+            $errors = $errorsManager->getErrors();
+            $firstError = reset($errors);
             $errorsManager->resetErrors()->flush();
-            return $this->outputError($error, $isAdmin);
+            return $this->outputError($firstError, $isAdmin);
         }
 
         return '';

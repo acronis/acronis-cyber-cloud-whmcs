@@ -60,5 +60,7 @@ TEXT;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getUsageReportManager()->eraseReports();
+
+        return 0;
     }
 }

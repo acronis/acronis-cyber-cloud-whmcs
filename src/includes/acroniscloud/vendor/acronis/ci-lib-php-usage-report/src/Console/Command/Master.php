@@ -7,7 +7,9 @@ namespace Acronis\UsageReport\Console\Command;
 
 use Acronis\UsageReport\Model\DatacenterInterface;
 use Acronis\UsageReport\Model\DatacenterRepositoryInterface;
+use Acronis\UsageReport\UsageReportSettingsInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AcronisCloud\Service\Logger\LoggerAwareTrait;
@@ -36,6 +38,11 @@ class Master extends Command
         $this
             ->setName($this->getCommandName())
             ->setDescription($this->getCommandDescription())
+            ->addArgument(
+                UsageReportSettingsInterface::PROPERTY_PHP_CLI_INTERPRETER,
+                InputArgument::OPTIONAL,
+                'PHP Cli Interpreter used for running report processing jobs.'
+            )
             ->setHelp($this->getCommandHelp());
 
         parent::configure();
@@ -86,22 +93,27 @@ TEXT;
                 $childPids[] = $pid;
                 continue;
             } else {
+                $interpreterArg = UsageReportSettingsInterface::PROPERTY_PHP_CLI_INTERPRETER;
+                $interpreter = $input->hasArgument($interpreterArg) ? $input->getArgument($interpreterArg) : 'php';
                 pcntl_exec(
                     '/usr/bin/env',
                     [
-                        'php',
+                        $interpreter,
+                        '--no-header',
                         $manageCommandPath,
                         Process::COMMAND_NAME,
                         $datacenter->getId()
                     ]
                 );
 
-                return;
+                return 0;
             }
         }
 
         foreach ($childPids as $pid) {
             pcntl_waitpid($pid, $status);
         }
+
+        return 0;
     }
 }

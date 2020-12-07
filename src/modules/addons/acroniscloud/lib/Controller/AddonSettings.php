@@ -5,6 +5,9 @@
 
 namespace WHMCS\Module\Addon\AcronisCloud\Controller;
 
+use Acronis\UsageReport\Manager as UsageReportManager;
+use Acronis\UsageReport\Service\FileManager;
+use Acronis\UsageReport\Service\ReportSettings;
 use AcronisCloud\Localization\GetTextTrait;
 use AcronisCloud\Model\Report;
 use AcronisCloud\Model\ReportStorage;
@@ -15,12 +18,15 @@ use AcronisCloud\ModuleMigration\Manager;
 use AcronisCloud\Service\BuildInfo\BuildInfoAwareTrait;
 use AcronisCloud\Service\Config\AddonConfigAccessor;
 use AcronisCloud\Service\Config\AddonConfigAwareTrait;
+use AcronisCloud\Service\Config\ConfigAwareTrait;
+use AcronisCloud\Service\Database\Repository\RepositoryAwareTrait;
 use AcronisCloud\Service\Dispatcher\AbstractController;
 use AcronisCloud\Service\Dispatcher\ActionInterface;
 use AcronisCloud\Service\Dispatcher\RequestInterface;
 use AcronisCloud\Service\Dispatcher\Response\DataResponse;
 use AcronisCloud\Service\Logger\LoggerAwareTrait;
 use AcronisCloud\Service\Logger\LogScope;
+use AcronisCloud\Service\UsageReport\UsageReportManagerAwareTrait;
 use Exception;
 use WHMCS\Database\Capsule;
 
@@ -29,7 +35,13 @@ class AddonSettings extends AbstractController
     use AddonConfigAwareTrait,
         GetTextTrait,
         BuildInfoAwareTrait,
-        LoggerAwareTrait;
+        LoggerAwareTrait,
+        RepositoryAwareTrait,
+        UsageReportManagerAwareTrait;
+    use ConfigAwareTrait {
+        getConfig as getAppConfig;
+    }
+
 
     const REQUIRED_DB_RIGHTS = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE'];
 
@@ -218,6 +230,10 @@ class AddonSettings extends AbstractController
         if (version_compare($version, '2.2.0-145', '<')) {
             $this->createUsageReportsDBTables();
         }
+
+        if (version_compare($version, '2.2.0-183', '<')) {
+            $this->markReportsForDeletion();
+        }
     }
 
     /**
@@ -314,6 +330,21 @@ class AddonSettings extends AbstractController
                 $table->longText(ReportStorage::COLUMN_VALUE);
                 $table->timestamps();
             });
+        }
+    }
+
+    private function markReportsForDeletion()
+    {
+        try {
+            $reports = $this->getRepository()->getUsageReportRepository()->getAllReports();
+            foreach ($reports as $report) {
+                if ($report->getStatus() === Report::REPORT_STATUS_DOWNLOADED) {
+                    $this->getLogger()->notice('Marked old usage report "{0}" for deletion.', [$report->getId()]);
+                    $report->markForDeletion();
+                }
+            }
+        } catch (\Exception $e) {
+            $this->getLogger()->warning('Error: Could not mark old usage reports for deletion. Details: {0}', [$e->getMessage()]);
         }
     }
 }

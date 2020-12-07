@@ -176,6 +176,12 @@ class Report extends AbstractModel implements ReportEntryInterface
         $this->save();
     }
 
+    public function markForDeletion()
+    {
+        $this->setAttribute(static::COLUMN_STATUS, self::REPORT_STATUS_MARK_FOR_DELETION);
+        $this->save();
+    }
+
     public function ordered($reportId)
     {
         $this->setAttribute(static::COLUMN_REPORT_ID, $reportId);

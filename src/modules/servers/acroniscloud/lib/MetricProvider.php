@@ -99,6 +99,8 @@ class MetricProvider implements ProviderInterface
      */
     public function metrics()
     {
+        $this->getLogger()->notice('MetricProvider::metrics() is called');
+
         return $this->getMetricsFromMeta();
     }
 
@@ -196,7 +198,6 @@ class MetricProvider implements ProviderInterface
         $metricBuilder = new MetricUnitBuilder();
 
         foreach ($metricsMeta as $metricData) {
-
             $systemName = $metricData['system_name'];
             $displayName = $metricData['display_name'];
             $type = $metricData['type'];

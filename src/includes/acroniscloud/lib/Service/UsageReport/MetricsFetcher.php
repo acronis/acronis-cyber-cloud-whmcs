@@ -5,21 +5,26 @@
 
 namespace AcronisCloud\Service\UsageReport;
 
+use Acronis\Cloud\Client\Model\Infra\Infra;
 use Acronis\UsageReport\Csv\CsvFormatParser;
 use Acronis\UsageReport\Csv\CsvReportIterator;
 use Acronis\UsageReport\Model\DatacenterRepositoryInterface;
 use Acronis\UsageReport\Model\ReportEntryRepositoryInterface;
 use Acronis\UsageReport\ReportRowWrapperInterface;
+use AcronisCloud\CloudApi\CloudApiTrait;
 use AcronisCloud\Model\WHMCS\Service;
 use AcronisCloud\Repository\ReportStorageRepository;
-use AcronisCloud\Repository\WHMCS\ServiceRepository;
 use AcronisCloud\Service\Logger\LoggerAwareTrait;
+use AcronisCloud\Util\Arr;
+use AcronisCloud\Util\MemoizeTrait;
 use AcronisCloud\Util\Time;
 use WHMCS\Module\Server\AcronisCloud\Product\CustomFields;
 
 class MetricsFetcher
 {
-    use LoggerAwareTrait;
+    use LoggerAwareTrait,
+        MemoizeTrait,
+        CloudApiTrait;
 
     const TENANT_TYPE_CUSTOMER = 'customer';
 
@@ -55,6 +60,16 @@ class MetricsFetcher
     ];
 
     /**
+     * @var string[]
+     */
+    private $childStorageMapping = [
+        'pg_storage' => 'pg_child_storages',
+        'pw_storage' => 'pg_child_storages',
+        'pw_dr_storage' => 'pw_dr_child_storages',
+        'fc_storage' => 'fc_child_storages'
+    ];
+
+    /**
      * @var array
      */
     private $tenants;
@@ -86,28 +101,37 @@ class MetricsFetcher
                 Time::getCurrentDate()
             );
 
-            if (null !== $report && $report->isDownloaded()) {
-
+            $this->getLogger()->notice(
+                'Processing metrics for datacenter with id {0}.',
+                [$datacenter->getId()]
+            );
+            if (null !== $report && $report->isDownloaded() && filesize($report->getFilePath())) {
                 $reportIterator = $this->createReportIterator($report->getFilePath());
-
                 foreach ($reportIterator as $rowIndex => $reportRow) {
-
                     if (\array_key_exists($reportRow->getTenantId(), $this->tenants)) {
                         $this->getLogger()->notice(
-                            'Started report row #{0} aggregation".',
+                            'Started report row #{0} aggregation.',
                             [$rowIndex + 1]
                         );
+                        $isPlaformOwned = $this->isInfraPlatformOwned($datacenter, $reportRow->getTenantId(), $reportRow->getInfraId());
+                        $partnerOIName = !$isPlaformOwned ? $this->getPartnerOfferingItemName($reportRow) : '';
+                        $offeringItemName = $partnerOIName ? $partnerOIName : $reportRow->getOfferingItemName();
+                        $metricName = $this->getMetricName($reportRow, $offeringItemName);
 
-                        $this->calculateReportRowUsage($metrics, $reportRow);
+                        $usage = $this->calculateReportRowUsage($reportRow);
+                        $tenantId = $reportRow->getTenantId();
+                        $infraId = $reportRow->getInfraId();
+                        $metrics[$tenantId][$metricName][$infraId] = $usage;
 
                         $this->getLogger()->notice(
-                            'Finished report row #{0} aggregation.',
-                            [$rowIndex + 1]
+                            'Finished report row #{0} aggregation with metrics for [{1}, {2}, {3}] = {4}.',
+                            [$rowIndex + 1, $tenantId, $metricName, $infraId, $usage]
                         );
                     }
                 }
             }
         }
+        $metrics = $this->sumByInfra($metrics);
 
         if (!empty($metrics)) {
             $this->reportStorageRepository->set($this->getKey(), \serialize($metrics));
@@ -135,13 +159,11 @@ class MetricsFetcher
     }
 
     /**
-     * @param array $metrics
      * @param ReportRowWrapperInterface $reportRow
      */
-    private function calculateReportRowUsage(&$metrics, $reportRow)
+    private function calculateReportRowUsage($reportRow)
     {
-        $metrics[$reportRow->getTenantId()][$this->getMetricName($reportRow)]
-            = $reportRow->getUsage(
+        return $reportRow->getUsage(
                 $this->getUsageStrategy($reportRow->getOfferingItemName()),
                 $this->getUsageCountingKind($reportRow->getTenantKind())
         );
@@ -175,18 +197,32 @@ class MetricsFetcher
     /**
      * @param ReportRowWrapperInterface $reportRow
      *
+     * @param $offeringItemName
      * @return string
      */
-    private function getMetricName($reportRow)
+    private function getMetricName($reportRow, $offeringItemName)
     {
-        $offeringItemName = $reportRow->getOfferingItemName();
         $infraBackendType = $reportRow->getInfraBackendType();
-
         if ($infraBackendType) {
             return \sprintf('%s_%s', $offeringItemName, $infraBackendType);
         }
 
         return $offeringItemName;
+    }
+
+    /**
+     * @param ReportRowWrapperInterface $reportRow
+     *
+     * @return string
+     */
+    private function getPartnerOfferingItemName($reportRow)
+    {
+        $offeringItemName = $reportRow->getOfferingItemName();
+        if ($reportRow->getInfraId() && isset($this->childStorageMapping[$offeringItemName])) {
+            return $this->childStorageMapping[$offeringItemName];
+        }
+
+        return '';
     }
 
     private function getTenants()
@@ -204,6 +240,36 @@ class MetricsFetcher
         }
 
         return $tenants;
+    }
 
+    private function isInfraPlatformOwned($datacenter, $tenantId, $infraId)
+    {
+        if (!$infraId) {
+            return false;
+        }
+
+        $tenantInfras = $this->memoize(function () use ($datacenter, $tenantId) {
+            /** @var Infra[] $tenantInfras */
+            $tenantInfras = $this->getCloudApiForServer($datacenter)->fetchTenantInfras($tenantId);
+            return Arr::map(
+                $tenantInfras,
+                function ($infra) { return $infra->getId(); },
+                function ($infra) { return $infra->getPlatformOwned(); }
+            );
+        }, $datacenter->getId() . '_' . $tenantId);
+
+        return Arr::get($tenantInfras, $infraId);
+    }
+
+    private function sumByInfra($metrics)
+    {
+        $summedMetrics = [];
+        foreach ($metrics as $tenantId => $namedMetrics) {
+            foreach ($namedMetrics as $metricName => $infrasMetrics) {
+                $summedMetrics[$tenantId][$metricName] = array_sum($infrasMetrics);
+            }
+        }
+
+        return $summedMetrics;
     }
 }

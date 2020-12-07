@@ -5,6 +5,7 @@
 
 namespace AcronisCloud\Repository\WHMCS;
 
+use AcronisCloud\Model\WHMCS\Product;
 use AcronisCloud\Model\WHMCS\Upgrade;
 use AcronisCloud\Repository\AbstractRepository;
 
@@ -26,6 +27,10 @@ class UpgradeRepository extends AbstractRepository
     public function findLastForService($serviceId)
     {
         return Upgrade::where(Upgrade::COLUMN_RELID, $serviceId)
+            ->where(Upgrade::COLUMN_TYPE, Upgrade::TYPE_PACKAGE)
+            ->whereHas(Upgrade::RELATION_ORIGINAL_PRODUCT, function ($query) {
+                $query->where(Product::COLUMN_SERVER_TYPE, ACRONIS_CLOUD_SERVICE_NAME);
+            })
             ->orderBy(Upgrade::COLUMN_ID, 'desc')
             ->first();
     }
